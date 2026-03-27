@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin — DISC Avaliações</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0d0d1a;
+  --surface:#13132a;
+  --card:#1a1a35;
+  --border:#2a2a50;
+  --accent:#6c63ff;
+  --text:#e8e8f0;
+  --muted:#7070a0;
+  --D:#e74c3c;--Dbg:#2d1515;
+  --I:#f39c12;--Ibg:#2d2010;
+  --S:#27ae60;--Sbg:#102d18;
+  --C:#2980b9;--Cbg:#0f1e2d;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:48px 40px;width:100%;max-width:400px;text-align:center;}
+.login-icon{font-size:48px;margin-bottom:16px;}
+.login-title{font-family:'Playfair Display',serif;font-size:26px;margin-bottom:8px;}
+.login-sub{color:var(--muted);font-size:14px;margin-bottom:32px;}
+.inp{width:100%;background:#0d0d1a;border:2px solid var(--border);border-radius:10px;padding:13px 16px;color:var(--text);font-size:15px;font-family:'Inter',sans-serif;outline:none;transition:border .2s;margin-bottom:16px;}
+.inp:focus{border-color:var(--accent);}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .2s;}
+.btn-accent{background:linear-gradient(135deg,#6c63ff,#4834d4);color:#fff;}
+.btn-accent:hover{opacity:.9;}
+.err{background:#2d1515;border:1px solid #e74c3c;border-radius:8px;padding:10px 14px;color:#e74c3c;font-size:13px;margin-bottom:16px;}
+
+/* LAYOUT */
+.sidebar{position:fixed;top:0;left:0;width:220px;height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 16px;z-index:100;}
+.logo{font-family:'Playfair Display',serif;font-size:18px;color:#fff;padding:0 8px;margin-bottom:32px;}
+.logo span{color:var(--accent);}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:14px;color:var(--muted);transition:all .2s;margin-bottom:4px;border:none;background:transparent;width:100%;text-align:left;font-family:'Inter',sans-serif;}
+.nav-item:hover,.nav-item.active{background:rgba(108,99,255,.15);color:#fff;}
+.nav-item.active{color:var(--accent);}
+.sidebar-bottom{margin-top:auto;}
+.main{margin-left:220px;padding:32px;}
+
+/* TOPBAR */
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:16px;}
+.page-title{font-family:'Playfair Display',serif;font-size:26px;}
+.topbar-right{display:flex;gap:10px;align-items:center;}
+.badge{background:rgba(108,99,255,.2);color:var(--accent);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700;}
+.btn-sm{padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
+.btn-sm:hover{border-color:var(--accent);color:var(--accent);}
+.btn-refresh{border-color:var(--accent);color:var(--accent);}
+
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:32px;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent-kpi);}
+.kpi-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.kpi-value{font-size:32px;font-weight:800;color:#fff;font-family:'Playfair Display',serif;}
+.kpi-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+.kpi-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:28px;opacity:.3;}
+
+/* CHARTS ROW */
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;}
+.chart-title{font-size:14px;font-weight:700;margin-bottom:20px;color:var(--text);}
+
+/* BAR CHART */
+.bar-chart{display:flex;flex-direction:column;gap:12px;}
+.bc-row{display:flex;align-items:center;gap:12px;}
+.bc-label{width:24px;font-weight:800;font-size:13px;}
+.bc-track{flex:1;height:28px;background:rgba(255,255,255,.05);border-radius:6px;overflow:hidden;position:relative;}
+.bc-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:10px;font-size:12px;font-weight:700;color:#fff;transition:width 1s ease;}
+.bc-count{font-size:13px;font-weight:700;color:var(--muted);width:60px;text-align:right;}
+
+/* DONUT */
+.donut-wrap{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;}
+.donut-legend{display:flex;flex-direction:column;gap:8px;}
+.dl-item{display:flex;align-items:center;gap:8px;font-size:13px;}
+.dl-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+
+/* FILTERS */
+.filter-bar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;align-items:center;}
+.filter-btn{padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
+.filter-btn:hover,.filter-btn.active{color:#fff;}
+.filter-btn.active-all{background:var(--accent);border-color:var(--accent);color:#fff;}
+.filter-btn.active-D{background:var(--D);border-color:var(--D);color:#fff;}
+.filter-btn.active-I{background:var(--I);border-color:var(--I);color:#fff;}
+.filter-btn.active-S{background:var(--S);border-color:var(--S);color:#fff;}
+.filter-btn.active-C{background:var(--C);border-color:var(--C);color:#fff;}
+.search-inp{flex:1;min-width:200px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:7px 16px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;outline:none;}
+.search-inp:focus{border-color:var(--accent);}
+
+/* RESULT CARDS */
+.results-grid{display:flex;flex-direction:column;gap:16px;}
+.res-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border .2s;}
+.res-card:hover{border-color:var(--accent);}
+.res-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);cursor:pointer;}
+.res-left{display:flex;align-items:center;gap:14px;}
+.profile-badge{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;font-family:'Playfair Display',serif;flex-shrink:0;}
+.res-name{font-weight:700;font-size:15px;}
+.res-email{font-size:12px;color:var(--muted);margin-top:2px;}
+.res-right{display:flex;align-items:center;gap:12px;}
+.profile-pill{border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;letter-spacing:.5px;}
+.res-date{font-size:11px;color:var(--muted);}
+.chevron{color:var(--muted);transition:transform .3s;font-size:18px;}
+.chevron.open{transform:rotate(180deg);}
+
+/* EXPANDED */
+.res-body{display:none;padding:20px;border-top:1px solid var(--border);}
+.res-body.open{display:block;}
+.res-body-grid{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start;}
+.mini-bars{display:flex;flex-direction:column;gap:8px;}
+.mb-row{display:flex;align-items:center;gap:8px;font-size:13px;}
+.mb-label{width:20px;font-weight:800;}
+.mb-track{flex:1;height:8px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden;}
+.mb-fill{height:100%;border-radius:4px;}
+.mb-pct{width:32px;text-align:right;color:var(--muted);font-size:12px;}
+.desc-text{font-size:14px;color:var(--muted);line-height:1.7;font-style:italic;border-left:3px solid;padding-left:12px;margin-bottom:16px;}
+.tags-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.tag{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;}
+.analyst-block{background:rgba(108,99,255,.08);border:1px solid rgba(108,99,255,.2);border-radius:10px;padding:14px;}
+.analyst-label{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:6px;}
+.analyst-txt{font-size:13px;color:var(--muted);line-height:1.6;}
+
+/* EMPTY / LOADING */
+.empty{text-align:center;padding:80px 24px;color:var(--muted);}
+.empty-icon{font-size:56px;margin-bottom:16px;}
+.loading-wrap{text-align:center;padding:80px;color:var(--muted);font-size:16px;}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .main{margin-left:0;padding:16px;}
+  .charts-row{grid-template-columns:1fr;}
+  .res-body-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="login-screen">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-icon">🔐</div>
+      <div class="login-title">Painel DISC</div>
+      <div class="login-sub">Acesso restrito ao gestor de RH</div>
+      <input type="password" class="inp" id="pass-inp" placeholder="Digite a senha de acesso"
+        onkeydown="if(event.key==='Enter')tryLogin()"/>
+      <div id="login-err" style="display:none" class="err">Senha incorreta. Tente novamente.</div>
+      <button class="btn btn-accent" onclick="tryLogin()">Entrar no Painel →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DASHBOARD ═══ -->
+<div id="dashboard" style="display:none">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="logo">DISC <span>Admin</span></div>
+    <button class="nav-item active" onclick="showPage('overview')">📊 &nbsp;Dashboard</button>
+    <button class="nav-item" onclick="showPage('results')">👥 &nbsp;Candidatas</button>
+    <div class="sidebar-bottom">
+      <button class="nav-item" onclick="logout()" style="color:#e74c3c">🚪 &nbsp;Sair</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- ── OVERVIEW PAGE ── -->
+    <div id="page-overview">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Dashboard</div>
+          <div style="color:var(--muted);font-size:13px;margin-top:4px">Visão geral das avaliações DISC</div>
+        </div>
+        <div class="topbar-right">
+          <span class="badge" id="total-badge">0 respostas</span>
+          <button class="btn-sm btn-refresh" onclick="loadData()">🔄 Atualizar</button>
+          <a href="/" target="_blank" style="text-decoration:none">
+            <button class="btn-sm">🔗 Ver Formulário</button>
+          </a>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <!-- CHARTS -->
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-title">Distribuição por Perfil Dominante</div>
+          <div class="bar-chart" id="bar-chart"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Médias de Score por Dimensão</div>
+          <div class="bar-chart" id="avg-chart"></div>
+        </div>
+      </div>
+
+      <!-- RECENT -->
+      <div class="chart-card">
+        <div class="chart-title">Últimas Respostas</div>
+        <div id="recent-list"></div>
+      </div>
+    </div>
+
+    <!-- ── RESULTS PAGE ── -->
+    <div id="page-results" style="display:none">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Candidatas</div>
+          <div style="color:var(--muted);font-size:13px;margin-top:4px">Resultados individuais detalhados</div>
+        </div>
+        <div class="topbar-right">
+          <button class="btn-sm btn-refresh" onclick="loadData()">🔄 Atualizar</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-btn active-all active" onclick="setFilter('all',this)">Todos</button>
+        <button class="filter-btn" onclick="setFilter('D',this)" style="--hover:#e74c3c">⚡ Dominância</button>
+        <button class="filter-btn" onclick="setFilter('I',this)">✨ Influência</button>
+        <button class="filter-btn" onclick="setFilter('S',this)">🌿 Estabilidade</button>
+        <button class="filter-btn" onclick="setFilter('C',this)">🎯 Conformidade</button>
+        <input class="search-inp" placeholder="🔍  Buscar por nome ou e-mail..." oninput="setSearch(this.value)"/>
+      </div>
+
+      <div class="results-grid" id="results-grid"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// CONFIGURE AQUI
+const ADMIN_PASS = "disc2026";
+const SCRIPT_URL = "COLE_A_URL_DO_APPS_SCRIPT_AQUI";
+const ADMIN_TOKEN = "disc2026admin";
+// ═══════════════════════════════════════════════
+
+const PROFILES = {
+  D:{name:"Dominância",color:"#e74c3c",bg:"#2d1515",icon:"⚡",
+    desc:"Direto, decisivo e orientado a resultados. Forte senso de urgência e gosta de autonomia.",
+    strengths:["Liderança natural","Foco em resultados","Decisão ágil","Alta produtividade"],
+    challenges:["Impaciente com processos lentos","Pode parecer autoritário"],
+    analyst:"Entrega análises com agilidade e defende insights para a liderança. Desenvolver escuta ativa amplia o impacto."},
+  I:{name:"Influência",color:"#f39c12",bg:"#2d2010",icon:"✨",
+    desc:"Comunicativo, entusiasmado e persuasivo. Facilidade em criar conexões e engajar equipes.",
+    strengths:["Comunicação carismática","Motivação de equipes","Criatividade","Networking"],
+    challenges:["Pode ser desorganizado com detalhes","Evita situações difíceis"],
+    analyst:"Facilidade em apresentar resultados e engajar stakeholders. Atenção a detalhes técnicos eleva a consistência."},
+  S:{name:"Estabilidade",color:"#27ae60",bg:"#102d18",icon:"🌿",
+    desc:"Paciente, confiável e colaborativo. Pilar da equipe — sempre presente e comprometido.",
+    strengths:["Confiabilidade","Trabalho em equipe","Escuta ativa","Consistência"],
+    challenges:["Resiste a mudanças","Evita conflitos em excesso"],
+    analyst:"Altamente confiável e consistente. Mais proatividade para defender análises acelera o crescimento."},
+  C:{name:"Conformidade",color:"#2980b9",bg:"#0f1e2d",icon:"🎯",
+    desc:"Analítico, preciso e meticuloso. Alto padrão de excelência e rigor técnico.",
+    strengths:["Atenção aos detalhes","Rigor técnico","Pensamento crítico","Organização"],
+    challenges:["Perfeccionismo em excesso","Dificuldade com dados incompletos"],
+    analyst:"Excelência em análise crítica e controle de qualidade. Mais agilidade nas entregas potencializa os resultados."}
+};
+
+let allData = [];
+let activeFilter = 'all';
+let searchQuery = '';
+
+function tryLogin(){
+  const v = document.getElementById('pass-inp').value;
+  if(v === ADMIN_PASS){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    loadData();
+  } else {
+    document.getElementById('login-err').style.display='block';
+  }
+}
+
+function logout(){
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('login-screen').style.display='block';
+  document.getElementById('pass-inp').value='';
+}
+
+function showPage(p){
+  document.getElementById('page-overview').style.display = p==='overview'?'block':'none';
+  document.getElementById('page-results').style.display = p==='results'?'block':'none';
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function scoreAnswers(answers){
+  const c={D:0,I:0,S:0,C:0};
+  Object.values(answers||{}).forEach(t=>c[t]++);
+  const total=Object.values(c).reduce((a,b)=>a+b,0);
+  const pct={};
+  ['D','I','S','C'].forEach(k=>pct[k]=total?Math.round(c[k]/total*100):0);
+  const dominant=Object.entries(c).sort((a,b)=>b[1]-a[1])[0]?.[0]||'D';
+  return{counts:c,pct,dominant};
+}
+
+async function loadData(){
+  // Try fetch from Apps Script
+  if(SCRIPT_URL && !SCRIPT_URL.includes('COLE')){
+    try{
+      const res = await fetch(`${SCRIPT_URL}?action=list&token=${ADMIN_TOKEN}`);
+      const data = await res.json();
+      if(data.results) allData = data.results;
+    }catch(e){}
+  }
+  // Demo data if no real data yet
+  if(allData.length===0){
+    allData = generateDemoData();
+  }
+  renderAll();
+}
+
+function generateDemoData(){
+  const names=[
+    {name:"Ana Beatriz Lima",email:"ana.lima@email.com"},
+    {name:"Carla Mendes",email:"carla.mendes@corp.com"},
+    {name:"Fernanda Souza",email:"fernanda.s@gmail.com"},
+    {name:"Juliana Costa",email:"jcosta@empresa.com"}
+  ];
+  const templates={
+    D:{D:10,I:4,S:3,C:3},
+    I:{D:3,I:11,S:3,C:3},
+    S:{D:2,I:4,S:11,C:3},
+    C:{D:2,I:3,S:4,C:11}
+  };
+  const types=['D','I','S','C'];
+  return names.map((p,i)=>{
+    const dom=types[i%4];
+    const tpl=templates[dom];
+    const answers={};
+    let idx=1;
+    ['D','I','S','C'].forEach(t=>{
+      for(let j=0;j<tpl[t];j++){answers[idx++]=t;}
+    });
+    const d=new Date();d.setDate(d.getDate()-i*2);
+    return{name:p.name,email:p.email,answers,submittedAt:d.toISOString(),_demo:true};
+  });
+}
+
+function renderAll(){
+  renderKPIs();
+  renderCharts();
+  renderRecent();
+  renderResults();
+  const n=allData.filter(r=>!r._demo).length||allData.length;
+  document.getElementById('total-badge').textContent=`${n} resposta${n!==1?'s':''}`;
+}
+
+function renderKPIs(){
+  const scored=allData.map(r=>({...r,...scoreAnswers(r.answers)}));
+  const counts={D:0,I:0,S:0,C:0};
+  scored.forEach(r=>counts[r.dominant]++);
+  const most=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
+  const kpis=[
+    {label:'Total Respostas',value:allData.length,sub:'candidatas avaliadas',icon:'👥',accent:'#6c63ff'},
+    {label:'Perfil Dominante',value:most?`${most[0]} · ${PROFILES[most[0]]?.name}`:'—',sub:`${most?most[1]:0} ocorrência(s)`,icon:'🏆',accent:most?PROFILES[most[0]].color:'#6c63ff'},
+    {label:'Dominância (D)',value:counts.D,sub:'candidatas',icon:'⚡',accent:'#e74c3c'},
+    {label:'Influência (I)',value:counts.I,sub:'candidatas',icon:'✨',accent:'#f39c12'},
+    {label:'Estabilidade (S)',value:counts.S,sub:'candidatas',icon:'🌿',accent:'#27ae60'},
+    {label:'Conformidade (C)',value:counts.C,sub:'candidatas',icon:'🎯',accent:'#2980b9'},
+  ];
+  document.getElementById('kpi-grid').innerHTML=kpis.map(k=>`
+    <div class="kpi" style="--accent-kpi:${k.accent}">
+      <div class="kpi-icon">${k.icon}</div>
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-value" style="font-size:${typeof k.value==='string'&&k.value.length>4?'18px':'32px'}">${k.value}</div>
+      <div class="kpi-sub">${k.sub}</div>
+    </div>`).join('');
+}
+
+function renderCharts(){
+  const scored=allData.map(r=>scoreAnswers(r.answers));
+  const domCounts={D:0,I:0,S:0,C:0};
+  scored.forEach(r=>domCounts[r.dominant]++);
+  const total=allData.length||1;
+
+  // Bar chart - dominant
+  document.getElementById('bar-chart').innerHTML=['D','I','S','C'].map(k=>{
+    const pct=Math.round(domCounts[k]/total*100);
+    return`<div class="bc-row">
+      <div class="bc-label" style="color:${PROFILES[k].color}">${k}</div>
+      <div class="bc-track">
+        <div class="bc-fill" style="width:${pct}%;background:${PROFILES[k].color}">${pct>10?PROFILES[k].name:''}</div>
+      </div>
+      <div class="bc-count">${domCounts[k]} (${pct}%)</div>
+    </div>`;
+  }).join('');
+
+  // Avg chart
+  const avgPct={D:0,I:0,S:0,C:0};
+  if(scored.length>0){
+    scored.forEach(r=>['D','I','S','C'].forEach(k=>avgPct[k]+=r.pct[k]));
+    ['D','I','S','C'].forEach(k=>avgPct[k]=Math.round(avgPct[k]/scored.length));
+  }
+  document.getElementById('avg-chart').innerHTML=['D','I','S','C'].map(k=>`
+    <div class="bc-row">
+      <div class="bc-label" style="color:${PROFILES[k].color}">${k}</div>
+      <div class="bc-track">
+        <div class="bc-fill" style="width:${avgPct[k]}%;background:${PROFILES[k].color}">${avgPct[k]>10?`Média ${avgPct[k]}%`:''}</div>
+      </div>
+      <div class="bc-count">${avgPct[k]}%</div>
+    </div>`).join('');
+}
+
+function renderRecent(){
+  const recent=allData.slice(0,5);
+  if(recent.length===0){document.getElementById('recent-list').innerHTML='<div style="color:var(--muted);text-align:center;padding:32px">Nenhuma resposta ainda.</div>';return;}
+  document.getElementById('recent-list').innerHTML=recent.map(r=>{
+    const {dominant}=scoreAnswers(r.answers);
+    const p=PROFILES[dominant];
+    const date=r.submittedAt?new Date(r.submittedAt).toLocaleString('pt-BR'):'';
+    return`<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;border-radius:10px;background:${p.bg};display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:${p.color};font-family:'Playfair Display',serif">${dominant}</div>
+        <div>
+          <div style="font-weight:600;font-size:14px">${r.name}</div>
+          <div style="font-size:12px;color:var(--muted)">${r.email}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="background:${p.bg};color:${p.color};border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700">${p.icon} ${p.name}</span>
+        <span style="font-size:12px;color:var(--muted)">${date}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setFilter(f,btn){
+  activeFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>{
+    b.className='filter-btn';
+    if(b===btn) b.className=`filter-btn active-${f} active`;
+  });
+  renderResults();
+}
+
+function setSearch(q){searchQuery=q.toLowerCase();renderResults();}
+
+function renderResults(){
+  let data=allData;
+  if(activeFilter!=='all') data=data.filter(r=>scoreAnswers(r.answers).dominant===activeFilter);
+  if(searchQuery) data=data.filter(r=>(r.name+r.email).toLowerCase().includes(searchQuery));
+
+  if(data.length===0){
+    document.getElementById('results-grid').innerHTML=`<div class="empty"><div class="empty-icon">🔍</div><div style="font-size:18px;font-weight:600;margin-bottom:8px">Nenhuma candidata encontrada</div><div>Tente outro filtro ou aguarde novas respostas.</div></div>`;
+    return;
+  }
+
+  document.getElementById('results-grid').innerHTML=data.map((r,i)=>{
+    const {dominant,pct,counts}=scoreAnswers(r.answers);
+    const p=PROFILES[dominant];
+    const date=r.submittedAt?new Date(r.submittedAt).toLocaleString('pt-BR'):'';
+    const demoTag=r._demo?'<span style="background:#2d2010;color:#f39c12;border-radius:4px;padding:2px 6px;font-size:10px;margin-left:6px">DEMO</span>':'';
+    return`<div class="res-card" id="card-${i}">
+      <div class="res-header" onclick="toggleCard(${i})">
+        <div class="res-left">
+          <div class="profile-badge" style="background:${p.bg};color:${p.color}">${dominant}</div>
+          <div>
+            <div class="res-name">${r.name}${demoTag}</div>
+            <div class="res-email">${r.email}</div>
+          </div>
+        </div>
+        <div class="res-right">
+          <span class="profile-pill" style="background:${p.bg};color:${p.color}">${p.icon} ${p.name}</span>
+          <span class="res-date">${date}</span>
+          <span class="chevron" id="chev-${i}">⌄</span>
+        </div>
+      </div>
+      <div class="res-body" id="body-${i}">
+        <div class="res-body-grid">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:12px;letter-spacing:1px">SCORES</div>
+            <div class="mini-bars">
+              ${['D','I','S','C'].map(k=>`
+                <div class="mb-row">
+                  <div class="mb-label" style="color:${PROFILES[k].color}">${k}</div>
+                  <div class="mb-track"><div class="mb-fill" style="width:${pct[k]}%;background:${PROFILES[k].color}"></div></div>
+                  <div class="mb-pct">${pct[k]}%</div>
+                </div>`).join('')}
+            </div>
+            <div style="margin-top:16px;display:flex;flex-direction:column;gap:4px">
+              ${['D','I','S','C'].map(k=>`
+                <div style="font-size:12px;color:var(--muted)">${k}: <strong style="color:${PROFILES[k].color}">${counts[k]} respostas</strong></div>`).join('')}
+            </div>
+          </div>
+          <div>
+            <div class="desc-text" style="border-color:${p.color}">${p.desc}</div>
+            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">✅ PONTOS FORTES</div>
+            <div class="tags-row" style="margin-bottom:12px">
+              ${p.strengths.map(s=>`<span class="tag" style="background:${p.bg};color:${p.color}">✓ ${s}</span>`).join('')}
+            </div>
+            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">⚠️ PONTOS DE ATENÇÃO</div>
+            <div class="tags-row" style="margin-bottom:16px">
+              ${p.challenges.map(c=>`<span class="tag" style="background:#2d1515;color:#e07070">• ${c}</span>`).join('')}
+            </div>
+            <div class="analyst-block">
+              <div class="analyst-label">🧑‍💼 AVALIAÇÃO PARA ANALISTA</div>
+              <div class="analyst-txt">${p.analyst}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleCard(i){
+  const body=document.getElementById(`body-${i}`);
+  const chev=document.getElementById(`chev-${i}`);
+  const open=body.classList.toggle('open');
+  chev.classList.toggle('open',open);
+}
+
+// Init
+document.getElementById('pass-inp').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
+</script>
+</body>
+</html>
