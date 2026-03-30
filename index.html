@@ -94,8 +94,11 @@
 // ═══════════════════════════════════════════════
 // !! CONFIGURE AQUI !!
 // Cole a URL do seu Google Apps Script abaixo:
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyoVkondai1DXfsjDuBLOd0zao6btoBATYRMke-3Ezwy1pBlOIyV_73oGVZDMFzwz24EA/exec";
-const ADMIN_TOKEN = "disc2026admin"; // token secreto para o admin
+// ══ COLE AQUI OS 2 VALORES DO SUPABASE ══
+const SUPABASE_URL = "https://zjwiwxldpkqsdorhfbqr.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpqd2l3eGxkcGtxc2RvcmhmYnFyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Njk1NzMsImV4cCI6MjA5MDQ0NTU3M30.EGv__7fYx2Zu2zExAPG9QCqbnNEpg9xNLAbQSmNja7g";
+// ═════════════════════════════════════════
+const ADMIN_PASS   = "disc2026";
 // ═══════════════════════════════════════════════
 
 const DISC_QUESTIONS = [
@@ -255,32 +258,40 @@ function resultCardHTML(r, compact=false){
   </div>`;
 }
 
-// ── API ──
+
+// ── API SUPABASE ──
 async function saveResult(data){
-  if(!SCRIPT_URL||SCRIPT_URL.includes("COLE")){return;}
   try{
-    // Usa GET com parâmetros — único método que funciona sem CORS no Apps Script
-    const params=new URLSearchParams({
-      action:"save",
-      token:ADMIN_TOKEN,
-      name:data.name||"",
-      email:data.email||"",
-      submittedAt:data.submittedAt||"",
-      answers:JSON.stringify(data.answers||{})
+    await fetch(SUPABASE_URL+"/rest/v1/disc_respostas",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "apikey":SUPABASE_KEY,
+        "Authorization":"Bearer "+SUPABASE_KEY,
+        "Prefer":"return=minimal"
+      },
+      body:JSON.stringify({
+        nome:data.name, email:data.email,
+        respostas:data.answers, enviado_em:data.submittedAt
+      })
     });
-    // no-cors: não lemos a resposta, mas o dado chega no servidor
-    await fetch(`${SCRIPT_URL}?${params.toString()}`,{method:"GET",mode:"no-cors"});
   }catch(e){}
 }
 
 async function loadResults(){
-  if(!SCRIPT_URL||SCRIPT_URL.includes("COLE")){return[];}
   try{
-    const res=await fetch(`${SCRIPT_URL}?action=list&token=${ADMIN_TOKEN}`);
-    const data=await res.json();
-    return data.results||[];
+    const r=await fetch(
+      SUPABASE_URL+"/rest/v1/disc_respostas?order=enviado_em.desc",
+      {headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY}}
+    );
+    const rows=await r.json();
+    return (rows||[]).map(r=>({
+      name:r.nome, email:r.email,
+      answers:r.respostas, submittedAt:r.enviado_em
+    }));
   }catch(e){return[];}
 }
+
 
 // ── HANDLERS ──
 async function handleSubmit(){
@@ -297,7 +308,7 @@ async function handleSubmit(){
 }
 
 async function handleAdminLogin(){
-  if(state.adminPass==="disc2026"){
+  if(state.adminPass===ADMIN_PASS){
     setState({loading:true,view:"admin",adminError:""});
     const allResults=await loadResults();
     setState({allResults,loading:false});
