@@ -153,6 +153,12 @@
   .summary-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
   .sum-chip{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 14px;font-size:12px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:6px;}
   .sum-chip strong{color:#fff;}
+
+  @media print {
+    body > * { display: none !important; }
+    #print-report { display: block !important; }
+  }
+  #print-report { display: none; }
 </style>
 </head>
 <body>
@@ -676,202 +682,8 @@ function setAdminSearch(q){
 }
 
 function generateReport(r){
-  const {dominant,pct,counts}=score(r.answers);
-  const p=PROFILES[dominant];
-  const dc=p.color,dbg=p.bg;
-  const date=r.submittedAt?new Date(r.submittedAt).toLocaleString('pt-BR'):'';
-  const kc={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
-  const kbg={D:'#FDF2F0',I:'#FEF9F0',S:'#F0FBF4',C:'#EBF5FB'};
-  const rec={
-    D:'Indicada para funções com metas claras e autonomia de execução. Potencial elevado para liderança. Acompanhar integração com equipe e estimular escuta ativa.',
-    I:'Indicada para comunicação e trabalho colaborativo. Estruturar prazos com checklist. Alto potencial para onboarding e engajamento de equipes.',
-    S:'Ideal para consistência e colaboração. Excelente para análise de rotina. Encorajar posicionamento mais ativo em reuniões estratégicas.',
-    C:'Ideal para análise técnica e controle de qualidade. Definir prazos claros e estimular decisão com dados parciais.'
-  };
-  const ideal={D:'Liderança, metas agressivas, decisão estratégica.',I:'Comunicação, engajamento, treinamentos, vendas.',S:'Processos, suporte, análise de rotina.',C:'Auditoria, dados, controle de qualidade.'};
-  const pressure={D:'Torna-se mais assertivo e controlador.',I:'Fica agitado, perde foco nas entregas.',S:'Retrai-se, evita conflito, tende à passividade.',C:'Analisa em excesso, trava nas decisões.'};
-  const mot={D:'Resultados, autonomia, desafios',I:'Reconhecimento, interação, variedade',S:'Estabilidade, harmonia, equipe',C:'Qualidade, precisão, lógica'};
-  const com2={D:'Objetiva, direta e rápida',I:'Expressiva, aberta e interativa',S:'Gentil, paciente e clara',C:'Estruturada, com dados e detalhes'};
-  const dev={D:'Escuta ativa e empatia',I:'Organização e atenção a detalhes',S:'Assertividade e proatividade',C:'Agilidade e flexibilidade'};
-
-  function radar(pct,sz){
-    sz=sz||150;
-    var cx=sz/2,cy=sz/2,r2=sz*0.37;
-    var lb=['D','I','S','C'],ag=[-90,0,90,180];
-    var CO={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
-    function ptf(k,f){f=f===undefined?1:f;var i=lb.indexOf(k),a=ag[i]*Math.PI/180,v=pct[k]/100*r2*f;return[cx+v*Math.cos(a),cy+v*Math.sin(a)];}
-    function axf(i,f){f=f===undefined?1:f;var a=ag[i]*Math.PI/180;return[cx+r2*f*Math.cos(a),cy+r2*f*Math.sin(a)];}
-    var s='<svg viewBox="0 0 '+sz+' '+sz+'" xmlns="http://www.w3.org/2000/svg">';
-    [.25,.5,.75,1].forEach(function(f){var ps=lb.map(function(_,i){return axf(i,f).join(',');}).join(' ');s+='<polygon points="'+ps+'" fill="none" stroke="#ddd" stroke-width="0.5"/>';});
-    for(var i=0;i<4;i++){var a2=axf(i);s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+a2[0]+'" y2="'+a2[1]+'" stroke="#ddd" stroke-width="0.4"/>';}
-    var dpts=lb.map(function(k){return ptf(k).join(',');}).join(' ');
-    s+='<polygon points="'+dpts+'" fill="rgba(108,99,255,.15)" stroke="#6c63ff" stroke-width="1.5"/>';
-    lb.forEach(function(k){var p2=ptf(k);s+='<circle cx="'+p2[0]+'" cy="'+p2[1]+'" r="3" fill="'+CO[k]+'"/>';});
-    lb.forEach(function(k,i){var a3=axf(i,1.22);s+='<text x="'+a3[0]+'" y="'+(a3[1]+4)+'" text-anchor="middle" font-size="11" font-weight="bold" fill="'+CO[k]+'" font-family="Arial">'+k+'</text>';});
-    return s+'</svg>';
-  }
-
-  function scoreCards(){
-    return ['D','I','S','C'].map(function(k){
-      return '<div style="border-radius:8px;padding:10px;text-align:center;background:'+kbg[k]+';border:2px solid '+(k===dominant?kc[k]:'transparent')+'">'+
-        '<div style="font-size:18px;font-weight:900;color:'+kc[k]+'">'+k+'</div>'+
-        '<div style="font-size:9px;color:'+kc[k]+';margin-top:1px">'+PROFILES[k].name+'</div>'+
-        '<div style="font-size:22px;font-weight:800;color:'+kc[k]+';margin-top:4px">'+pct[k]+'%</div>'+
-        '<div style="font-size:9px;color:#999;margin-top:1px">'+counts[k]+' respostas</div>'+
-      '</div>';
-    }).join('');
-  }
-
-  function legendBars(){
-    return ['D','I','S','C'].map(function(k){
-      return '<div style="display:flex;align-items:center;gap:5px;font-size:11px">'+
-        '<div style="width:9px;height:9px;border-radius:2px;background:'+kc[k]+';flex-shrink:0"></div>'+
-        '<span style="color:'+kc[k]+';font-weight:700;width:14px">'+k+'</span>'+
-        '<div style="flex:1;height:6px;background:#f0f0f0;border-radius:3px;overflow:hidden"><div style="width:'+pct[k]+'%;height:100%;background:'+kc[k]+';border-radius:3px"></div></div>'+
-        '<span style="width:26px;text-align:right;font-weight:700;color:'+kc[k]+';font-size:10px">'+pct[k]+'%</span>'+
-      '</div>';
-    }).join('');
-  }
-
-  function guideCards(){
-    return ['D','I','S','C'].map(function(k){
-      var isDom=k===dominant;
-      return '<div style="background:'+kbg[k]+';border-radius:8px;padding:12px;border:'+(isDom?'2px solid '+kc[k]:'1.5px solid #eee')+'">'+
-        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'+
-          '<div style="width:30px;height:30px;border-radius:6px;background:'+kc[k]+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900">'+k+'</div>'+
-          '<div>'+
-            '<div style="font-size:13px;font-weight:800;color:'+kc[k]+'">'+PROFILES[k].name+(isDom?' ★':'')+'</div>'+
-            '<div style="font-size:10px;color:#888">'+pct[k]+'% · '+counts[k]+' de 20</div>'+
-          '</div>'+
-        '</div>'+
-        '<div style="font-size:10.5px;font-style:italic;color:#555;line-height:1.5;border-left:2px solid '+kc[k]+';padding-left:8px;margin-bottom:6px">'+PROFILES[k].desc+'</div>'+
-        '<div style="font-size:9px;font-weight:800;color:'+kc[k]+';text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Ideal para</div>'+
-        '<div style="font-size:10.5px;color:#333;margin-bottom:5px">'+ideal[k]+'</div>'+
-        '<div style="font-size:9px;font-weight:800;color:#e74c3c;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Sob Pressão</div>'+
-        '<div style="font-size:10.5px;color:#555;margin-bottom:5px">'+pressure[k]+'</div>'+
-        '<div style="font-size:9px;font-weight:800;color:#1e8449;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Pontos Fortes</div>'+
-        PROFILES[k].strengths.slice(0,3).map(function(s){return '<div style="font-size:10.5px;color:#1a3d24;margin-bottom:2px">• '+s+'</div>';}).join('')+
-      '</div>';
-    }).join('');
-  }
-
-  function tableRows(){
-    return ['D','I','S','C'].map(function(k,i){
-      return '<tr style="background:'+(k===dominant?kbg[k]:i%2===0?'#fafafa':'#fff')+';'+(k===dominant?'border-left:3px solid '+kc[k]+';':'')+'">'+
-        '<td style="padding:7px 10px;font-weight:800;color:'+kc[k]+'">'+k+' — '+PROFILES[k].name+'</td>'+
-        '<td style="padding:7px 10px;color:#333">'+mot[k]+'</td>'+
-        '<td style="padding:7px 10px;color:#333">'+com2[k]+'</td>'+
-        '<td style="padding:7px 10px;color:#333">'+dev[k]+'</td>'+
-      '</tr>';
-    }).join('');
-  }
-
-  var fullHTML='<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/>'+
-  '<title>Relatório DISC — '+r.name+'</title>'+
-  '<style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#2a2a3e;padding:0;font-family:Arial,sans-serif;}'+
-  '.topbar{position:fixed;top:0;left:0;right:0;background:#0f0c29;padding:13px 24px;display:flex;justify-content:space-between;align-items:center;z-index:999;border-bottom:1px solid rgba(255,255,255,.1);}'+
-  '.topbar h2{color:#fff;font-size:15px;font-weight:700;}'+
-  '.tbtn{padding:9px 20px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;margin-left:8px;font-family:Arial,sans-serif;}'+
-  '.tbtn-p{background:linear-gradient(135deg,#6c63ff,#4834d4);color:#fff;}'+
-  '.tbtn-c{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);}'+
-  '.pages{margin-top:58px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:16px;}'+
-  '.pg{width:210mm;background:#fff;}'+
-  '@media print{.topbar{display:none!important;}.pages{margin-top:0!important;padding:0!important;gap:0!important;}body{background:#fff!important;}'+
-  '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}'+
-  '.pg{page-break-after:always;}.pg:last-child{page-break-after:avoid;}}'+
-  '</style></head><body>'+
-  '<div class="topbar"><h2>📄 Relatório DISC — '+r.name+'</h2>'+
-  '<div><button class="tbtn tbtn-p" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>'+
-  '<button class="tbtn tbtn-c" onclick="window.close()">✕ Fechar</button></div></div>'+
-  '<div class="pages">'+
-
-  // PAGE 1
-  '<div class="pg">'+
-    '<div style="background:linear-gradient(135deg,#0f0c29,#0f3460);padding:24px 28px;display:flex;justify-content:space-between;align-items:center">'+
-      '<div><div style="font-size:20px;font-weight:800;color:#fff;font-family:Arial">Avaliação DISC</div>'+
-      '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:3px">Relatório Individual de Perfil Comportamental</div></div>'+
-      '<div style="font-size:11px;color:rgba(255,255,255,.5)">'+date+'</div>'+
-    '</div>'+
-    '<div style="padding:14px 28px;display:flex;justify-content:space-between;align-items:center;background:'+dbg+';border-bottom:3px solid '+dc+'">'+
-      '<div style="display:flex;align-items:center;gap:12px">'+
-        '<div style="width:44px;height:44px;border-radius:10px;background:'+dc+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;flex-shrink:0">'+dominant+'</div>'+
-        '<div><div style="font-size:16px;font-weight:800;color:#1a1a2e">'+r.name+'</div>'+
-        '<div style="font-size:11px;color:#777;margin-top:2px">'+r.email+'</div></div>'+
-      '</div>'+
-      '<div style="background:'+dc+';color:#fff;border-radius:20px;padding:7px 18px;font-size:13px;font-weight:800">Perfil '+dominant+' · '+p.name+'</div>'+
-    '</div>'+
-    '<div style="padding:16px 28px">'+
-      '<div style="font-size:10px;font-weight:800;color:#aaa;letter-spacing:2px;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid #eee;margin-bottom:12px">Resultado Geral</div>'+
-      '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">'+scoreCards()+'</div>'+
-      '<div style="display:grid;grid-template-columns:160px 1fr;gap:16px">'+
-        '<div style="display:flex;flex-direction:column;align-items:center;gap:8px">'+
-          radar(pct,150)+
-          '<div style="width:100%;display:flex;flex-direction:column;gap:4px">'+legendBars()+'</div>'+
-        '</div>'+
-        '<div>'+
-          '<div style="background:'+dbg+';border-left:4px solid '+dc+';padding:10px 12px;border-radius:0 6px 6px 0;font-style:italic;font-size:12px;line-height:1.65;color:#333;margin-bottom:10px">'+p.desc+'</div>'+
-          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">'+
-            '<div style="background:#f0fbf4;border:1px solid #c8e6c9;border-radius:7px;padding:10px">'+
-              '<div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#1e6b3a;margin-bottom:6px">✅ Pontos Fortes</div>'+
-              p.strengths.map(function(s){return '<div style="font-size:11px;color:#1a3d24;margin-bottom:3px">• '+s+'</div>';}).join('')+
-            '</div>'+
-            '<div style="background:#fdf2f0;border:1px solid #ffcdd2;border-radius:7px;padding:10px">'+
-              '<div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#c62828;margin-bottom:6px">⚠️ Pontos de Atenção</div>'+
-              p.challenges.map(function(s){return '<div style="font-size:11px;color:#5a1a14;margin-bottom:3px">• '+s+'</div>';}).join('')+
-            '</div>'+
-          '</div>'+
-          '<div style="background:#eef4ff;border-left:4px solid #4a6cf7;border-radius:0 7px 7px 0;padding:10px 12px;margin-bottom:8px">'+
-            '<div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a237e;margin-bottom:5px;text-transform:uppercase">🧑‍💼 Orientação ao Candidato</div>'+
-            '<div style="font-size:12px;color:#1a237e;line-height:1.6">'+p.analyst+'</div>'+
-          '</div>'+
-          '<div style="background:#f0fbf4;border-left:4px solid #1e8449;border-radius:0 7px 7px 0;padding:10px 12px">'+
-            '<div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a3d24;margin-bottom:5px;text-transform:uppercase">📋 Recomendação ao Recrutador</div>'+
-            '<div style="font-size:12px;color:#1a3d24;line-height:1.6">'+rec[dominant]+'</div>'+
-          '</div>'+
-        '</div>'+
-      '</div>'+
-    '</div>'+
-    '<div style="background:#f8f9fc;border-top:1px solid #eee;padding:10px 28px;display:flex;justify-content:space-between;align-items:center">'+
-      '<div style="font-size:10px;color:#aaa">Avaliação DISC · '+r.name+' · '+date+'</div>'+
-      '<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:3px 9px;font-size:10px;color:#856404;font-weight:700">🔒 Confidencial · Pág. 1/2</div>'+
-    '</div>'+
-  '</div>'+
-
-  // PAGE 2
-  '<div class="pg">'+
-    '<div style="background:linear-gradient(135deg,#0f0c29,#0f3460);padding:24px 28px;display:flex;justify-content:space-between;align-items:center">'+
-      '<div><div style="font-size:20px;font-weight:800;color:#fff;font-family:Arial">Guia de Referência DISC</div>'+
-      '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:3px">Comparativo dos quatro perfis comportamentais</div></div>'+
-      '<div style="font-size:11px;color:rgba(255,255,255,.5)">Candidata: '+r.name+'</div>'+
-    '</div>'+
-    '<div style="padding:16px 28px">'+
-      '<div style="font-size:10px;font-weight:800;color:#aaa;letter-spacing:2px;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid #eee;margin-bottom:12px">Os Quatro Perfis DISC</div>'+
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'+guideCards()+'</div>'+
-      '<div style="font-size:10px;font-weight:800;color:#aaa;letter-spacing:2px;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid #eee;margin-bottom:10px">Resumo Comparativo</div>'+
-      '<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:12px">'+
-        '<tr style="background:#1a1a2e">'+
-          '<th style="padding:8px 10px;text-align:left;color:#fff;font-size:11px">Perfil</th>'+
-          '<th style="padding:8px 10px;text-align:left;color:#fff;font-size:11px">Motivações</th>'+
-          '<th style="padding:8px 10px;text-align:left;color:#fff;font-size:11px">Comunicação</th>'+
-          '<th style="padding:8px 10px;text-align:left;color:#fff;font-size:11px">Desenvolvimento</th>'+
-        '</tr>'+tableRows()+
-      '</table>'+
-      '<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:10px 14px;font-size:11px;color:#856404;line-height:1.6">'+
-        '<strong>🔒 Documento Confidencial</strong> · Uso exclusivo do departamento de Recursos Humanos. Não compartilhar sem autorização. As informações refletem o perfil comportamental da avaliação DISC e devem ser utilizadas como ferramenta de desenvolvimento.'+
-      '</div>'+
-    '</div>'+
-    '<div style="background:#f8f9fc;border-top:1px solid #eee;padding:10px 28px;display:flex;justify-content:space-between;align-items:center;margin-top:8px">'+
-      '<div style="font-size:10px;color:#aaa">Avaliação DISC · '+r.name+' · '+date+'</div>'+
-      '<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:3px 9px;font-size:10px;color:#856404;font-weight:700">🔒 Confidencial · Pág. 2/2</div>'+
-    '</div>'+
-  '</div>'+
-
-  '</div></body></html>';
-
-  var blob=new Blob([fullHTML],{type:'text/html;charset=utf-8'});
-  var url=URL.createObjectURL(blob);
-  var tab=window.open(url,'_blank');
-  if(!tab){alert('Permita popups para este site no seu navegador e tente novamente.');}
+  state._printCandidate = r;
+  window.print();
 }
 
 
@@ -901,6 +713,93 @@ function selectAnswer(qId,type){
   state.answers={...state.answers,[qId]:type};
   render();
 }
+
+
+// ── PRINT ──
+window.addEventListener('beforeprint', function(){
+  var r = state._printCandidate;
+  if(!r) return;
+  var el = document.getElementById('print-report');
+  if(!el){ el = document.createElement('div'); el.id='print-report'; document.body.appendChild(el); }
+  var s = score(r.answers);
+  var dominant = s.dominant;
+  var pct = s.pct;
+  var counts = s.counts;
+  var p = PROFILES[dominant];
+  var dc = p.color;
+  var dbg = p.bg;
+  var kc = {D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
+  var kbg = {D:'#FDF2F0',I:'#FEF9F0',S:'#F0FBF4',C:'#EBF5FB'};
+  var date = r.submittedAt ? new Date(r.submittedAt).toLocaleString('pt-BR') : '';
+  var rec = {
+    D:'Indicada para funções com metas claras e autonomia. Potencial para liderança. Estimular escuta ativa e integração com equipe.',
+    I:'Indicada para comunicação e trabalho colaborativo. Estruturar prazos com checklist. Potencial para onboarding.',
+    S:'Ideal para consistência e colaboração. Excelente para análise de rotina. Encorajar posicionamento mais ativo.',
+    C:'Ideal para análise técnica e controle de qualidade. Definir prazos claros. Estimular decisão com dados parciais.'
+  };
+  var scoreCards = ['D','I','S','C'].map(function(k){
+    return '<div style="border-radius:8px;padding:12px;text-align:center;background:'+kbg[k]+';border:2px solid '+(k===dominant?kc[k]:'transparent')+'">'+
+      '<div style="font-size:20px;font-weight:900;color:'+kc[k]+'">'+k+'</div>'+
+      '<div style="font-size:10px;color:'+kc[k]+';margin-top:2px">'+PROFILES[k].name+'</div>'+
+      '<div style="font-size:24px;font-weight:800;color:'+kc[k]+';margin-top:6px">'+pct[k]+'%</div>'+
+      '<div style="font-size:9px;color:#999;margin-top:2px">'+counts[k]+' respostas</div>'+
+    '</div>';
+  }).join('');
+  el.innerHTML =
+    '<div style="font-family:Arial,sans-serif;font-size:13px;color:#1a1a2e;background:#fff;padding:0">'+
+    // HEADER
+    '<div style="background:linear-gradient(135deg,#0f0c29,#0f3460);padding:22px 28px;display:flex;justify-content:space-between;align-items:center">'+
+      '<div><div style="font-size:20px;font-weight:800;color:#fff">Avaliação DISC</div>'+
+      '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:3px">Relatório Individual de Perfil Comportamental</div></div>'+
+      '<div style="font-size:11px;color:rgba(255,255,255,.5)">'+date+'</div>'+
+    '</div>'+
+    // INFO STRIP
+    '<div style="padding:14px 28px;display:flex;justify-content:space-between;align-items:center;background:'+dbg+';border-bottom:3px solid '+dc+'">'+
+      '<div style="display:flex;align-items:center;gap:12px">'+
+        '<div style="width:44px;height:44px;border-radius:10px;background:'+dc+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900">'+dominant+'</div>'+
+        '<div><div style="font-size:16px;font-weight:800">'+r.name+'</div>'+
+        '<div style="font-size:11px;color:#777;margin-top:2px">'+r.email+'</div></div>'+
+      '</div>'+
+      '<div style="background:'+dc+';color:#fff;border-radius:20px;padding:7px 18px;font-size:13px;font-weight:800">Perfil '+dominant+' · '+p.name+'</div>'+
+    '</div>'+
+    // SCORES
+    '<div style="padding:16px 28px">'+
+      '<div style="font-size:10px;font-weight:800;color:#aaa;letter-spacing:2px;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid #eee;margin-bottom:12px">Resultado Geral</div>'+
+      '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">'+scoreCards+'</div>'+
+      // DESC
+      '<div style="background:'+dbg+';border-left:4px solid '+dc+';padding:12px 14px;border-radius:0 6px 6px 0;font-style:italic;font-size:12px;line-height:1.65;color:#333;margin-bottom:12px">'+p.desc+'</div>'+
+      // 2 cols
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">'+
+        '<div style="background:#f0fbf4;border:1px solid #c8e6c9;border-radius:7px;padding:12px">'+
+          '<div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#1e6b3a;margin-bottom:8px">✅ Pontos Fortes</div>'+
+          p.strengths.map(function(s){return '<div style="font-size:11px;color:#1a3d24;margin-bottom:4px">• '+s+'</div>';}).join('')+
+        '</div>'+
+        '<div style="background:#fdf2f0;border:1px solid #ffcdd2;border-radius:7px;padding:12px">'+
+          '<div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#c62828;margin-bottom:8px">⚠️ Pontos de Atenção</div>'+
+          p.challenges.map(function(s){return '<div style="font-size:11px;color:#5a1a14;margin-bottom:4px">• '+s+'</div>';}).join('')+
+        '</div>'+
+      '</div>'+
+      '<div style="background:#eef4ff;border-left:4px solid #4a6cf7;border-radius:0 7px 7px 0;padding:12px 14px;margin-bottom:10px">'+
+        '<div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a237e;margin-bottom:6px;text-transform:uppercase">🧑‍💼 Orientação ao Candidato</div>'+
+        '<div style="font-size:12px;color:#1a237e;line-height:1.65">'+p.analyst+'</div>'+
+      '</div>'+
+      '<div style="background:#f0fbf4;border-left:4px solid #1e8449;border-radius:0 7px 7px 0;padding:12px 14px;margin-bottom:10px">'+
+        '<div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a3d24;margin-bottom:6px;text-transform:uppercase">📋 Recomendação ao Recrutador</div>'+
+        '<div style="font-size:12px;color:#1a3d24;line-height:1.65">'+rec[dominant]+'</div>'+
+      '</div>'+
+    '</div>'+
+    '<div style="background:#f8f9fc;border-top:1px solid #eee;padding:10px 28px;display:flex;justify-content:space-between;align-items:center">'+
+      '<div style="font-size:10px;color:#aaa">Avaliação DISC · '+r.name+' · '+date+'</div>'+
+      '<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:3px 9px;font-size:10px;color:#856404;font-weight:700">🔒 Documento Confidencial</div>'+
+    '</div>'+
+    '</div>';
+});
+
+window.addEventListener('afterprint', function(){
+  state._printCandidate = null;
+  var el = document.getElementById('print-report');
+  if(el) el.innerHTML = '';
+});
 
 render();
 </script>
