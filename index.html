@@ -923,18 +923,38 @@ function generateReport(r){
   </div>
 </div>`;
 
-  // Remove existing overlay if any
+  // Remove existing overlay
   const existing=document.getElementById('rpt-overlay');
-  if(existing) existing.parentNode.removeChild(existing);
-  // Inject into page
-  const div=document.createElement('div');
-  div.innerHTML=reportHTML;
-  document.body.appendChild(div.firstElementChild);
+  if(existing) existing.remove();
+  const existingStyle=document.getElementById('rpt-style');
+  if(existingStyle) existingStyle.remove();
+
+  // Extract <style> and inject into <head>
+  const styleMatch=reportHTML.match(/<style>([\s\S]*?)<\/style>/);
+  if(styleMatch){
+    const styleEl=document.createElement('style');
+    styleEl.id='rpt-style';
+    styleEl.textContent=styleMatch[1];
+    document.head.appendChild(styleEl);
+  }
+
+  // Extract body content (everything after </style>)
+  const bodyContent=reportHTML.replace(/<style>[\s\S]*?<\/style>/,'').trim();
+  const wrapper=document.createElement('div');
+  wrapper.innerHTML=bodyContent;
+  const overlay=wrapper.querySelector('#rpt-overlay');
+  if(overlay){
+    document.body.style.overflow='hidden';
+    document.body.appendChild(overlay);
+  }
 }
 
 function closeReport(){
   const el=document.getElementById('rpt-overlay');
-  if(el) el.parentNode.removeChild(el);
+  if(el) el.remove();
+  const st=document.getElementById('rpt-style');
+  if(st) st.remove();
+  document.body.style.overflow='';
 }
 
 // ── MAIN RENDER ──
