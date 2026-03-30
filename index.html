@@ -74,16 +74,85 @@
   .bar-fill{height:100%;border-radius:6px;transition:width 1s ease;}
 
   /* Admin */
-  .admin-wrap{max-width:900px;width:100%;margin:0 auto;}
-  .admin-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
-  .admin-title{color:#fff;font-family:'Playfair Display',serif;font-size:24px;}
-  .admin-sub{color:rgba(255,255,255,.6);font-size:13px;margin-top:4px;}
-  .btn-sm{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:10px 18px;cursor:pointer;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;}
-  .empty-state{background:rgba(255,255,255,.1);border-radius:16px;padding:48px;text-align:center;color:rgba(255,255,255,.7);}
-  .empty-icon{font-size:48px;margin-bottom:12px;}
-  .loading{color:#fff;text-align:center;padding:60px;font-size:18px;}
   .admin-link{margin-top:16px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.45);border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;}
   .success-note{background:#f8f9fa;border-radius:12px;padding:16px;font-size:13px;color:#666;line-height:1.6;text-align:center;}
+  /* ── ADMIN DASHBOARD ── */
+  .adm{min-height:100vh;background:linear-gradient(135deg,#0a0a1a,#111128,#0d0d22);font-family:'Inter',sans-serif;padding:0;}
+  .adm-topbar{background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.08);padding:16px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;position:sticky;top:0;z-index:10;backdrop-filter:blur(12px);}
+  .adm-logo{font-family:'Playfair Display',serif;font-size:20px;color:#fff;display:flex;align-items:center;gap:10px;}
+  .adm-logo span{background:linear-gradient(135deg,#6c63ff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .adm-topbar-right{display:flex;gap:8px;align-items:center;}
+  .adm-btn{padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
+  .adm-btn:hover{background:rgba(255,255,255,.12);color:#fff;}
+  .adm-btn-accent{background:linear-gradient(135deg,#6c63ff,#4834d4);border-color:transparent;color:#fff;}
+  .adm-content{padding:28px;}
+  /* KPI grid */
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:28px;}
+  .kpi-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden;transition:border .2s;}
+  .kpi-card:hover{border-color:rgba(255,255,255,.18);}
+  .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,#6c63ff);}
+  .kpi-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+  .kpi-value{font-size:30px;font-weight:800;color:#fff;font-family:'Playfair Display',serif;line-height:1;}
+  .kpi-sub{font-size:11px;color:rgba(255,255,255,.35);margin-top:5px;}
+  .kpi-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:26px;opacity:.18;}
+  /* Charts row */
+  .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;}
+  @media(max-width:700px){.charts-row{grid-template-columns:1fr;}}
+  .chart-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;}
+  .chart-title{font-size:13px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:16px;letter-spacing:.3px;}
+  /* Bar chart */
+  .bc-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .bc-key{width:18px;font-size:12px;font-weight:800;flex-shrink:0;}
+  .bc-track{flex:1;height:24px;background:rgba(255,255,255,.05);border-radius:5px;overflow:hidden;}
+  .bc-fill{height:100%;border-radius:5px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:rgba(255,255,255,.9);transition:width .8s ease;}
+  .bc-pct{width:38px;text-align:right;font-size:12px;font-weight:700;color:rgba(255,255,255,.5);}
+  /* Filters */
+  .filter-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;}
+  .f-btn{padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:transparent;color:rgba(255,255,255,.5);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
+  .f-btn:hover,.f-btn.fa{border-color:var(--fc,#6c63ff);color:var(--fc,#6c63ff);background:rgba(108,99,255,.08);}
+  .f-search{flex:1;min-width:180px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:7px 16px;color:#fff;font-size:13px;font-family:'Inter',sans-serif;outline:none;}
+  .f-search:focus{border-color:rgba(108,99,255,.5);}
+  .f-search::placeholder{color:rgba(255,255,255,.3);}
+  /* Candidate cards */
+  .cand-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;margin-bottom:12px;overflow:hidden;transition:border .2s;}
+  .cand-card:hover{border-color:rgba(255,255,255,.15);}
+  .cand-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;cursor:pointer;flex-wrap:wrap;gap:8px;}
+  .cand-left{display:flex;align-items:center;gap:14px;}
+  .cand-avatar{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;font-family:'Playfair Display',serif;flex-shrink:0;}
+  .cand-name{font-size:15px;font-weight:700;color:#fff;}
+  .cand-email{font-size:12px;color:rgba(255,255,255,.4);margin-top:1px;}
+  .cand-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .profile-pill{border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;}
+  .cand-date{font-size:11px;color:rgba(255,255,255,.3);}
+  .cand-chev{color:rgba(255,255,255,.3);font-size:18px;transition:transform .3s;}
+  .cand-chev.open{transform:rotate(180deg);}
+  /* Expanded body */
+  .cand-body{display:none;padding:0 20px 20px;border-top:1px solid rgba(255,255,255,.06);}
+  .cand-body.open{display:block;}
+  .cand-grid{display:grid;grid-template-columns:200px 1fr;gap:20px;padding-top:16px;}
+  @media(max-width:600px){.cand-grid{grid-template-columns:1fr;}}
+  .score-bars{display:flex;flex-direction:column;gap:9px;}
+  .sb-row{display:flex;align-items:center;gap:8px;}
+  .sb-key{width:16px;font-size:11px;font-weight:800;}
+  .sb-track{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;}
+  .sb-fill{height:100%;border-radius:4px;}
+  .sb-pct{width:30px;font-size:11px;color:rgba(255,255,255,.4);text-align:right;}
+  .cand-desc{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;font-style:italic;border-left:3px solid;padding-left:12px;margin-bottom:14px;}
+  .tag-section{margin-bottom:12px;}
+  .tag-title{font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;}
+  .tag{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:500;}
+  .eval-box{border-radius:10px;padding:14px;margin-top:4px;}
+  .eval-title{font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;}
+  .eval-text{font-size:13px;line-height:1.65;}
+  .rec-box{border-radius:10px;padding:14px;margin-top:10px;}
+  /* Empty / loading */
+  .adm-empty{text-align:center;padding:60px 20px;color:rgba(255,255,255,.3);}
+  .adm-loading{text-align:center;padding:60px;color:rgba(255,255,255,.4);font-size:15px;}
+  /* Summary row */
+  .summary-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+  .sum-chip{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 14px;font-size:12px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:6px;}
+  .sum-chip strong{color:#fff;}
 </style>
 </head>
 <body>
@@ -161,7 +230,9 @@ let state = {
   allResults:[],
   loading:false,
   submitLoading:false,
-  infoError:""
+  infoError:"",
+  adminFilter:"all",
+  adminSearch:""
 };
 
 function setState(patch){
@@ -431,33 +502,185 @@ function renderAdminLogin(){
 }
 
 function renderAdmin(){
-  const count=state.allResults.length;
-  return`<div class="admin-wrap">
-    <div class="admin-top">
-      <div>
-        <div class="admin-title">📊 Painel de Resultados DISC</div>
-        <div class="admin-sub">${count} resposta(s) recebida(s)</div>
+  const all=state.allResults;
+  const count=all.length;
+  // Scores
+  const domCounts={D:0,I:0,S:0,C:0};
+  all.forEach(r=>{const s=score(r.answers);domCounts[s.dominant]++;});
+  const most=Object.entries(domCounts).sort((a,b)=>b[1]-a[1])[0];
+  // Filter
+  let filtered=all;
+  if(state.adminFilter&&state.adminFilter!=='all') filtered=all.filter(r=>score(r.answers).dominant===state.adminFilter);
+  if(state.adminSearch) filtered=filtered.filter(r=>(r.name+r.email).toLowerCase().includes(state.adminSearch.toLowerCase()));
+
+  const kpis=[
+    {label:'Total Respostas',value:count,sub:'candidatas avaliadas',icon:'👥',c:'#6c63ff'},
+    {label:'Perfil Dominante',value:most?most[0]+' · '+PROFILES[most[0]].name:'—',sub:most?most[1]+' ocorrência(s)':'',icon:'🏆',c:most?PROFILES[most[0]].color:'#6c63ff'},
+    {label:'Dominância D',value:domCounts.D,sub:'candidatas',icon:'⚡',c:'#C0392B'},
+    {label:'Influência I',value:domCounts.I,sub:'candidatas',icon:'✨',c:'#D35400'},
+    {label:'Estabilidade S',value:domCounts.S,sub:'candidatas',icon:'🌿',c:'#1E8449'},
+    {label:'Conformidade C',value:domCounts.C,sub:'candidatas',icon:'🎯',c:'#1A5276'},
+  ];
+
+  const barChart=['D','I','S','C'].map(k=>{
+    const pct=count?Math.round(domCounts[k]/count*100):0;
+    return`<div class="bc-row">
+      <div class="bc-key" style="color:${DISC_COLORS[k]}">${k}</div>
+      <div class="bc-track">
+        <div class="bc-fill" style="width:${pct}%;background:${DISC_COLORS[k]}">${pct>12?PROFILES[k].name:''}</div>
       </div>
-      <div style="display:flex;gap:10px">
-        <button class="btn-sm" onclick="refreshAdmin()">🔄 Atualizar</button>
-        <button class="btn-sm" onclick="setState({view:'form',step:'info'})">← Sair</button>
+      <div class="bc-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+
+  const avgChart=count?['D','I','S','C'].map(k=>{
+    const avg=Math.round(all.reduce((s,r)=>{const sc=score(r.answers);return s+sc.pct[k];},0)/count);
+    return`<div class="bc-row">
+      <div class="bc-key" style="color:${DISC_COLORS[k]}">${k}</div>
+      <div class="bc-track">
+        <div class="bc-fill" style="width:${avg}%;background:${DISC_COLORS[k]}">${avg>12?'Média '+avg+'%':''}</div>
+      </div>
+      <div class="bc-pct">${avg}%</div>
+    </div>`;
+  }).join(''):'<div style="color:rgba(255,255,255,.3);font-size:13px">Nenhum dado ainda.</div>';
+
+  const cards=filtered.length===0
+    ?`<div class="adm-empty"><div style="font-size:48px;margin-bottom:12px">🔍</div><div>Nenhuma candidata encontrada</div></div>`
+    :filtered.map((r,i)=>{
+      const {dominant,pct,counts}=score(r.answers);
+      const p=PROFILES[dominant];
+      const rec={
+        D:'Indicada para funções com metas claras e autonomia. Potencial de liderança. Monitorar integração com equipe.',
+        I:'Indicada para comunicação e trabalho colaborativo. Estruturar prazos e entregas. Potencial em treinamentos.',
+        S:'Excelente para processos e suporte. Encorajar posicionamento mais ativo em reuniões estratégicas.',
+        C:'Ideal para análise técnica e controle de qualidade. Definir prazos claros. Trabalhar decisão com dados parciais.'
+      };
+      const date=r.submittedAt?new Date(r.submittedAt).toLocaleString('pt-BR'):'';
+      return`<div class="cand-card" id="cc${i}">
+        <div class="cand-header" onclick="toggleCand(${i})">
+          <div class="cand-left">
+            <div class="cand-avatar" style="background:${p.bg};color:${p.color}">${dominant}</div>
+            <div>
+              <div class="cand-name">${r.name}</div>
+              <div class="cand-email">${r.email}</div>
+            </div>
+          </div>
+          <div class="cand-right">
+            <span class="profile-pill" style="background:${p.bg};color:${p.color}">${p.icon} ${p.name}</span>
+            <span class="cand-date">${date}</span>
+            <span class="cand-chev" id="chev${i}">⌄</span>
+          </div>
+        </div>
+        <div class="cand-body" id="cb${i}">
+          <div class="cand-grid">
+            <div>
+              <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:1px;margin-bottom:12px">SCORES DISC</div>
+              <div class="score-bars">
+                ${['D','I','S','C'].map(k=>`
+                  <div class="sb-row">
+                    <div class="sb-key" style="color:${DISC_COLORS[k]}">${k}</div>
+                    <div class="sb-track"><div class="sb-fill" style="width:${pct[k]}%;background:${DISC_COLORS[k]}"></div></div>
+                    <div class="sb-pct">${pct[k]}%</div>
+                  </div>`).join('')}
+              </div>
+              <div style="margin-top:14px;display:flex;flex-direction:column;gap:5px;">
+                ${['D','I','S','C'].map(k=>`
+                  <div style="font-size:12px;color:rgba(255,255,255,.4)">${k} — <strong style="color:${DISC_COLORS[k]}">${counts[k]} respostas</strong></div>`).join('')}
+              </div>
+              ${radarSVG(pct)}
+            </div>
+            <div>
+              <div class="cand-desc" style="border-color:${p.color}">${p.desc}</div>
+              <div class="tag-section">
+                <div class="tag-title" style="color:#27ae60">✅ Pontos Fortes</div>
+                <div class="tags">${p.strengths.map(s=>`<span class="tag" style="background:#0d2d1a;color:#4ade80">✓ ${s}</span>`).join('')}</div>
+              </div>
+              <div class="tag-section">
+                <div class="tag-title" style="color:#e74c3c">⚠️ Pontos de Atenção</div>
+                <div class="tags">${p.challenges.map(s=>`<span class="tag" style="background:#2d0d0d;color:#f87171">• ${s}</span>`).join('')}</div>
+              </div>
+              <div class="eval-box" style="background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.2)">
+                <div class="eval-title" style="color:#a78bfa">🧑‍💼 Avaliação para Analista</div>
+                <div class="eval-text" style="color:rgba(200,195,255,.8)">${p.analyst}</div>
+              </div>
+              <div class="rec-box" style="background:rgba(30,132,73,.1);border:1px solid rgba(30,132,73,.25)">
+                <div class="eval-title" style="color:#4ade80">📋 Recomendação ao Recrutador</div>
+                <div class="eval-text" style="color:rgba(150,220,170,.8)">${rec[dominant]}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+  return`<div class="adm">
+    <div class="adm-topbar">
+      <div class="adm-logo">📊 <span>DISC</span> Admin</div>
+      <div class="adm-topbar-right">
+        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-right:4px">${count} resposta(s)</div>
+        <button class="adm-btn adm-btn-accent" onclick="refreshAdmin()">🔄 Atualizar</button>
+        <button class="adm-btn" onclick="setState({view:'form',step:'info'})">← Sair</button>
       </div>
     </div>
-    ${state.loading?`<div class="loading">⏳ Carregando resultados...</div>`:
-      count===0?`<div class="empty-state"><div class="empty-icon">📭</div><div style="font-size:18px;font-weight:600">Nenhuma resposta ainda</div><div style="font-size:14px;margin-top:6px">Compartilhe o link do formulário para receber avaliações.</div></div>`:
-      state.allResults.map(r=>resultCardHTML(r,true)).join("")}
+    <div class="adm-content">
+      ${state.loading?`<div class="adm-loading">⏳ Carregando...</div>`:`
+      <!-- KPIs -->
+      <div class="kpi-grid">
+        ${kpis.map(k=>`<div class="kpi-card" style="--kc:${k.c}">
+          <div class="kpi-icon">${k.icon}</div>
+          <div class="kpi-label">${k.label}</div>
+          <div class="kpi-value" style="font-size:${String(k.value).length>6?'18px':'30px'}">${k.value}</div>
+          <div class="kpi-sub">${k.sub}</div>
+        </div>`).join('')}
+      </div>
+      <!-- Charts -->
+      <div class="charts-row">
+        <div class="chart-box">
+          <div class="chart-title">Distribuição por Perfil Dominante</div>
+          ${barChart}
+        </div>
+        <div class="chart-box">
+          <div class="chart-title">Média de Score por Dimensão</div>
+          ${avgChart}
+        </div>
+      </div>
+      <!-- Filters -->
+      <div class="filter-row">
+        <button class="f-btn ${!state.adminFilter||state.adminFilter==='all'?'fa':''}" style="--fc:#6c63ff" onclick="setAdminFilter('all',this)">Todos (${count})</button>
+        ${['D','I','S','C'].map(k=>`<button class="f-btn ${state.adminFilter===k?'fa':''}" style="--fc:${DISC_COLORS[k]}" onclick="setAdminFilter('${k}',this)">${PROFILES[k].icon} ${PROFILES[k].name} (${domCounts[k]})</button>`).join('')}
+        <input class="f-search" placeholder="🔍 Buscar por nome ou e-mail..." oninput="setAdminSearch(this.value)" value="${state.adminSearch||''}"/>
+      </div>
+      <!-- Cards -->
+      ${cards}
+      `}
+    </div>
   </div>`;
+}
+
+function toggleCand(i){
+  const b=document.getElementById('cb'+i);
+  const c=document.getElementById('chev'+i);
+  const open=b.classList.toggle('open');
+  c.classList.toggle('open',open);
+}
+
+function setAdminFilter(f){
+  setState({adminFilter:f});
+}
+
+function setAdminSearch(q){
+  state.adminSearch=q;
+  render();
 }
 
 // ── MAIN RENDER ──
 function render(){
   const app=document.getElementById("app");
-  const isAdmin=state.view==="admin"||state.view==="adminLogin";
-  app.innerHTML=`<div class="wrap" style="${isAdmin?"max-width:100%;padding:0 16px":""}">${
+  if(state.view==="admin"){app.innerHTML=renderAdmin();return;}
+  app.innerHTML=`<div class="wrap">${
     state.view==="form"?(state.step==="info"?renderInfo():renderQuestions()):
     state.view==="done"?renderDone():
-    state.view==="adminLogin"?renderAdminLogin():
-    renderAdmin()
+    renderAdminLogin()
   }</div>`;
 }
 
