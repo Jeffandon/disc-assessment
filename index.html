@@ -681,306 +681,260 @@ function generateReport(r){
   const dc=p.color, dbg=p.bg;
   const date=r.submittedAt?new Date(r.submittedAt).toLocaleString('pt-BR'):'';
   const rec={
-    D:'Candidata com perfil Dominante é indicada para funções com metas claras e autonomia de execução. Potencial elevado para liderança de projetos e tomada de decisão rápida. Recomenda-se acompanhar integração com equipe e estimular o desenvolvimento de habilidades interpessoais e escuta ativa.',
-    I:'Candidata com perfil de Influência é indicada para funções que envolvem comunicação, apresentação de resultados e trabalho colaborativo. Recomenda-se estruturar entregas com checklist de prazos. Alto potencial para onboarding, treinamentos e engajamento de equipes.',
-    S:'Candidata com perfil de Estabilidade é ideal para equipes que valorizam consistência e colaboração. Excelente para análise de rotina e suporte a processos. Recomenda-se encorajar posicionamento mais ativo em reuniões e discussões estratégicas, além de trabalhar assertividade.',
-    C:'Candidata com perfil de Conformidade é ideal para funções de análise técnica, auditoria e controle de qualidade. Recomenda-se definir prazos claros e estimular a tomada de decisão com dados parciais. Desenvolver agilidade nas entregas potencializa os resultados.'
+    D:'Candidata com perfil Dominante é indicada para funções com metas claras e autonomia de execução. Potencial elevado para liderança de projetos e tomada de decisão rápida. Recomenda-se acompanhar integração com equipe e estimular escuta ativa e habilidades interpessoais.',
+    I:'Candidata com perfil de Influência é indicada para funções que envolvem comunicação, apresentação de resultados e trabalho colaborativo. Recomenda-se estruturar entregas com checklist de prazos. Alto potencial para onboarding e engajamento de equipes.',
+    S:'Candidata com perfil de Estabilidade é ideal para equipes que valorizam consistência e colaboração. Excelente para análise de rotina e suporte a processos. Recomenda-se encorajar posicionamento mais ativo em reuniões e trabalhar assertividade.',
+    C:'Candidata com perfil de Conformidade é ideal para funções de análise técnica, auditoria e controle de qualidade. Recomenda-se definir prazos claros e estimular decisão com dados parciais. Desenvolver agilidade nas entregas potencializa os resultados.'
   };
 
-  // Radar SVG for print
-  function radarPrint(pct,size=140){
-    const cx=size/2, cy=size/2, r=size*0.38;
-    const labels=['D','I','S','C'], angles=[-90,0,90,180];
+  function radarPrint(pct,size){
+    size=size||150;
+    const cx=size/2,cy=size/2,r2=size*0.37;
+    const labels=['D','I','S','C'],angles=[-90,0,90,180];
     const COLS={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
-    function pt(k,f=1){const i=labels.indexOf(k),a=angles[i]*Math.PI/180,v=pct[k]/100*r*f;return{x:cx+v*Math.cos(a),y:cy+v*Math.sin(a)};}
-    function ax(i,f=1){const a=angles[i]*Math.PI/180;return{x:cx+r*f*Math.cos(a),y:cy+r*f*Math.sin(a)};}
-    let s=`<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">`;
-    [.25,.5,.75,1].forEach(f=>{const ps=labels.map((_,i)=>{const a=angles[i]*Math.PI/180;return`${cx+r*f*Math.cos(a)},${cy+r*f*Math.sin(a)}`;}).join(' ');s+=`<polygon points="${ps}" fill="none" stroke="#dde0e8" stroke-width="0.6"/>`;});
-    for(let i=0;i<4;i++){const a2=ax(i);s+=`<line x1="${cx}" y1="${cy}" x2="${a2.x}" y2="${a2.y}" stroke="#dde0e8" stroke-width="0.5"/>`;}
-    const dpts=labels.map(k=>pt(k));
-    s+=`<polygon points="${dpts.map(p=>`${p.x},${p.y}`).join(' ')}" fill="rgba(108,99,255,0.15)" stroke="#6c63ff" stroke-width="1.5"/>`;
-    labels.forEach((k,i)=>{const p2=pt(k);s+=`<circle cx="${p2.x}" cy="${p2.y}" r="3" fill="${COLS[k]}"/>`;});
-    labels.forEach((k,i)=>{const a2=ax(i,1.22);s+=`<text x="${a2.x}" y="${a2.y+4}" text-anchor="middle" font-size="11" font-weight="700" fill="${COLS[k]}" font-family="Arial">${k}</text>`;});
-    s+=`</svg>`;return s;
+    function ptf(k,f){f=f||1;const i=labels.indexOf(k),a=angles[i]*Math.PI/180,v=pct[k]/100*r2*f;return{x:cx+v*Math.cos(a),y:cy+v*Math.sin(a)};}
+    function axf(i,f){f=f||1;const a=angles[i]*Math.PI/180;return{x:cx+r2*f*Math.cos(a),y:cy+r2*f*Math.sin(a)};}
+    let s='<svg viewBox="0 0 '+size+' '+size+'" width="'+size+'" height="'+size+'" xmlns="http://www.w3.org/2000/svg">';
+    [.25,.5,.75,1].forEach(function(f){const ps=labels.map(function(_,i){const a=angles[i]*Math.PI/180;return (cx+r2*f*Math.cos(a))+','+(cy+r2*f*Math.sin(a));}).join(' ');s+='<polygon points="'+ps+'" fill="none" stroke="#dde0e8" stroke-width="0.6"/>';});
+    for(let i=0;i<4;i++){const a2=axf(i);s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+a2.x+'" y2="'+a2.y+'" stroke="#dde0e8" stroke-width="0.5"/>';}
+    const dpts=labels.map(function(k){return ptf(k);});
+    s+='<polygon points="'+dpts.map(function(p2){return p2.x+','+p2.y;}).join(' ')+'" fill="rgba(108,99,255,0.15)" stroke="#6c63ff" stroke-width="1.5"/>';
+    labels.forEach(function(k){const p2=ptf(k);s+='<circle cx="'+p2.x+'" cy="'+p2.y+'" r="3" fill="'+COLS[k]+'"/>';});
+    labels.forEach(function(k,i){const a2=axf(i,1.22);s+='<text x="'+a2.x+'" y="'+(a2.y+4)+'" text-anchor="middle" font-size="11" font-weight="700" fill="'+COLS[k]+'" font-family="Arial,sans-serif">'+k+'</text>';});
+    s+='</svg>';return s;
   }
 
-  const win=window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head>
-<meta charset="UTF-8"/>
-<title>Relatório DISC — ${r.name}</title>
+  const kc={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
+  const kbg={D:'#FDF2F0',I:'#FEF9F0',S:'#F0FBF4',C:'#EBF5FB'};
+  const ideal={D:'Liderança, metas agressivas, decisão estratégica, projetos de alta pressão.',I:'Comunicação, engajamento, treinamentos, vendas e relacionamento.',S:'Processos, suporte, análise de rotina, qualidade relacional.',C:'Auditoria, dados, controle de qualidade, análise técnica.'};
+  const pressure={D:'Torna-se mais assertivo e controlador. Pode desconsiderar a equipe.',I:'Fica agitado, fala em excesso, perde o foco nas entregas.',S:'Retrai-se, evita conflito, tende à passividade.',C:'Analisa em excesso, trava nas decisões, eleva o nível crítico.'};
+  const mot={D:'Resultados, autonomia, desafios',I:'Reconhecimento, interação, variedade',S:'Estabilidade, harmonia, equipe',C:'Qualidade, precisão, lógica'};
+  const com={D:'Objetiva, direta e rápida',I:'Expressiva, aberta e interativa',S:'Gentil, paciente e clara',C:'Estruturada, com dados e detalhes'};
+  const dev={D:'Escuta ativa e empatia com a equipe',I:'Organização e atenção a detalhes',S:'Assertividade e proatividade',C:'Agilidade e flexibilidade nas entregas'};
+
+  const reportHTML=`
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');
-  body{font-family:'Inter',Arial,sans-serif;background:#fff;color:#1a1a2e;font-size:13px;}
-  @page{size:A4;margin:0;}
-  @media print{
-    body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-    .no-print{display:none!important;}
-    .page{page-break-after:always;}
-    .page:last-child{page-break-after:avoid;}
-  }
-  /* Print button */
-  .print-bar{background:#1a1a2e;color:#fff;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
-  .print-bar h2{font-size:15px;font-family:'Playfair Display',serif;}
-  .pbtns{display:flex;gap:8px;}
-  .pbtn{padding:8px 20px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
-  .pbtn-print{background:linear-gradient(135deg,#6c63ff,#4834d4);color:#fff;}
-  .pbtn-close{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);}
-  /* PAGE */
-  .page{width:210mm;min-height:297mm;margin:0 auto;padding:0;background:#fff;overflow:hidden;}
+  #rpt-overlay{position:fixed;inset:0;background:#1a1a2e;z-index:9999;display:flex;flex-direction:column;font-family:'Inter',Arial,sans-serif;overflow:hidden;}
+  #rpt-bar{background:#0f0c29;border-bottom:1px solid rgba(255,255,255,.1);padding:12px 24px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+  #rpt-bar h2{font-size:15px;color:#fff;font-weight:700;}
+  #rpt-bar-btns{display:flex;gap:8px;}
+  .rpt-bbtn{padding:8px 18px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
+  .rpt-bbtn-print{background:linear-gradient(135deg,#6c63ff,#4834d4);color:#fff;}
+  .rpt-bbtn-close{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);}
+  #rpt-scroll{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;align-items:center;gap:0;}
+  .rpt-page{width:210mm;background:#fff;color:#1a1a2e;font-family:'Inter',Arial,sans-serif;font-size:13px;margin-bottom:16px;box-shadow:0 8px 40px rgba(0,0,0,.4);}
   /* HEADER */
-  .rpt-header{background:linear-gradient(135deg,#0f0c29,#1a1a3e,#0f3460);padding:28px 32px;display:flex;justify-content:space-between;align-items:center;}
-  .rpt-header-left h1{font-family:'Playfair Display',serif;font-size:22px;color:#fff;margin-bottom:4px;}
-  .rpt-header-left p{font-size:12px;color:rgba(255,255,255,.55);}
-  .rpt-header-right{text-align:right;}
-  .rpt-header-right .company{font-size:13px;font-weight:700;color:rgba(255,255,255,.8);}
-  .rpt-header-right .dt{font-size:11px;color:rgba(255,255,255,.4);margin-top:3px;}
-  /* INFO STRIP */
-  .info-strip{padding:16px 32px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid ${dc};}
-  .info-left{display:flex;align-items:center;gap:14px;}
-  .info-avatar{width:48px;height:48px;border-radius:12px;background:${dbg};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:${dc};font-family:'Playfair Display',serif;flex-shrink:0;}
-  .info-name{font-size:17px;font-weight:800;color:#1a1a2e;}
-  .info-email{font-size:12px;color:#888;margin-top:2px;}
-  .info-cargo{font-size:12px;color:#888;margin-top:1px;}
-  .profile-badge{background:${dc};color:#fff;border-radius:20px;padding:8px 20px;font-size:14px;font-weight:800;letter-spacing:1px;}
+  .rh{background:linear-gradient(135deg,#0f0c29,#1a1a3e,#0f3460);padding:24px 28px;display:flex;justify-content:space-between;align-items:center;}
+  .rh h1{font-size:20px;color:#fff;font-weight:800;margin-bottom:3px;}
+  .rh p{font-size:11px;color:rgba(255,255,255,.5);}
+  .rh-date{font-size:11px;color:rgba(255,255,255,.5);text-align:right;}
+  /* INFO */
+  .ri{padding:14px 28px;display:flex;justify-content:space-between;align-items:center;background:${dbg};border-bottom:3px solid ${dc};}
+  .ri-left{display:flex;align-items:center;gap:12px;}
+  .ri-av{width:44px;height:44px;border-radius:10px;background:${dc};color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0;}
+  .ri-name{font-size:16px;font-weight:800;color:#1a1a2e;}
+  .ri-sub{font-size:11px;color:#777;margin-top:2px;}
+  .ri-badge{background:${dc};color:#fff;border-radius:20px;padding:7px 18px;font-size:13px;font-weight:800;}
   /* SECTION */
-  .section{padding:20px 32px;}
-  .section-title{font-size:12px;font-weight:800;color:#888;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-  .section-title::after{content:'';flex:1;height:1px;background:#eee;}
+  .rs{padding:16px 28px;}
+  .rs-title{font-size:10px;font-weight:800;color:#aaa;letter-spacing:2px;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid #eee;margin-bottom:12px;}
   /* SCORE CARDS */
-  .score-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:4px;}
-  .sc{border-radius:10px;padding:12px;text-align:center;border:2px solid transparent;}
-  .sc.dominant{border-color:${dc};}
-  .sc-letter{font-size:20px;font-weight:900;font-family:'Playfair Display',serif;}
-  .sc-name{font-size:9px;margin-top:1px;}
-  .sc-pct{font-size:22px;font-weight:800;margin-top:4px;}
-  .sc-resp{font-size:9px;color:#999;margin-top:1px;}
-  /* MAIN CONTENT */
-  .main-grid{display:grid;grid-template-columns:180px 1fr;gap:20px;}
-  .radar-area{display:flex;flex-direction:column;align-items:center;gap:8px;}
-  .radar-legend{display:flex;flex-direction:column;gap:5px;width:100%;}
-  .rl-row{display:flex;align-items:center;gap:6px;font-size:11px;}
-  .rl-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
-  .rl-bar{flex:1;height:7px;background:#f0f1f5;border-radius:3px;overflow:hidden;}
+  .rsc{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+  .rsc-card{border-radius:8px;padding:10px;text-align:center;}
+  .rsc-card.dom{border:2px solid ${dc};}
+  .rsc-letter{font-size:18px;font-weight:900;}
+  .rsc-name{font-size:9px;margin-top:1px;}
+  .rsc-pct{font-size:20px;font-weight:800;margin-top:3px;}
+  .rsc-resp{font-size:9px;color:#999;margin-top:1px;}
+  /* MAIN GRID */
+  .rmg{display:grid;grid-template-columns:160px 1fr;gap:16px;}
+  .rmg-left{display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .rl-row{display:flex;align-items:center;gap:5px;font-size:11px;width:100%;}
+  .rl-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+  .rl-bar{flex:1;height:6px;background:#f0f1f5;border-radius:3px;overflow:hidden;}
   .rl-fill{height:100%;border-radius:3px;}
-  .rl-pct{width:28px;text-align:right;font-weight:700;}
-  /* DESC */
-  .desc-block{background:${dbg};border-left:4px solid ${dc};padding:12px 14px;border-radius:0 8px 8px 0;font-style:italic;font-size:12.5px;line-height:1.7;color:#333;margin-bottom:14px;}
-  /* TWO COL */
-  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-  .info-box{border-radius:8px;padding:12px;}
-  .ib-title{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
-  .ib-item{font-size:11.5px;margin-bottom:5px;line-height:1.5;}
-  /* ANALYST BOX */
-  .analyst-box{background:#eef4ff;border-left:4px solid #4a6cf7;border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:12px;}
-  .ab-title{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#1a237e;margin-bottom:6px;}
-  .ab-text{font-size:12px;color:#1a237e;line-height:1.65;}
-  /* REC BOX */
-  .rec-box{background:#f0fbf4;border-left:4px solid #1e8449;border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:12px;}
-  .rb-title{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#1a3d24;margin-bottom:6px;}
-  .rb-text{font-size:12px;color:#1a3d24;line-height:1.65;}
-  /* PAGE 2 */
-  .guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  .guide-card{border-radius:10px;padding:14px;border:1.5px solid;}
-  .gc-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-  .gc-badge{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;font-family:'Playfair Display',serif;color:#fff;}
-  .gc-name{font-size:14px;font-weight:800;}
-  .gc-pct{font-size:11px;color:#888;}
-  .gc-desc{font-size:11px;line-height:1.6;font-style:italic;margin-bottom:8px;padding-left:8px;border-left:2px solid;}
-  .gc-section{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;margin-top:8px;}
-  .gc-item{font-size:11px;margin-bottom:3px;}
+  .rl-pct{width:26px;text-align:right;font-weight:700;font-size:10px;}
+  /* BLOCKS */
+  .rb-desc{background:${dbg};border-left:4px solid ${dc};padding:10px 12px;border-radius:0 6px 6px 0;font-style:italic;font-size:12px;line-height:1.65;color:#333;margin-bottom:12px;}
+  .r2col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+  .r-box{border-radius:7px;padding:10px;}
+  .r-box-title{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+  .r-box-item{font-size:11px;margin-bottom:4px;line-height:1.4;}
+  .r-analyst{background:#eef4ff;border-left:4px solid #4a6cf7;border-radius:0 7px 7px 0;padding:10px 12px;margin-bottom:10px;}
+  .r-analyst-title{font-size:9px;font-weight:800;letter-spacing:1px;color:#1a237e;margin-bottom:5px;text-transform:uppercase;}
+  .r-analyst-text{font-size:12px;color:#1a237e;line-height:1.6;}
+  .r-rec{background:#f0fbf4;border-left:4px solid #1e8449;border-radius:0 7px 7px 0;padding:10px 12px;}
+  .r-rec-title{font-size:9px;font-weight:800;letter-spacing:1px;color:#1a3d24;margin-bottom:5px;text-transform:uppercase;}
+  .r-rec-text{font-size:12px;color:#1a3d24;line-height:1.6;}
+  /* GUIDE */
+  .rg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .rg-card{border-radius:8px;padding:12px;border:1.5px solid #eee;}
+  .rg-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .rg-badge{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;}
+  .rg-title{font-size:13px;font-weight:800;}
+  .rg-pct{font-size:10px;color:#888;}
+  .rg-desc{font-size:10.5px;font-style:italic;color:#555;line-height:1.55;border-left:2px solid;padding-left:8px;margin-bottom:6px;}
+  .rg-sec{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin:5px 0 3px;}
+  .rg-item{font-size:10.5px;margin-bottom:2px;}
+  /* TABLE */
+  .r-table{width:100%;border-collapse:collapse;font-size:11px;}
+  .r-table th{background:#1a1a2e;color:#fff;padding:8px 10px;text-align:left;}
+  .r-table td{padding:7px 10px;border-bottom:1px solid #f0f0f0;}
   /* FOOTER */
-  .rpt-footer{background:#f8f9fc;border-top:1px solid #eee;padding:12px 32px;display:flex;justify-content:space-between;align-items:center;}
-  .rf-left{font-size:10px;color:#aaa;}
-  .rf-right{font-size:10px;color:#aaa;}
-  .rf-conf{background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:4px 10px;font-size:10px;color:#856404;font-weight:600;}
+  .rfooter{background:#f8f9fc;border-top:1px solid #eee;padding:10px 28px;display:flex;justify-content:space-between;align-items:center;}
+  .rfooter-l{font-size:10px;color:#aaa;}
+  .rfooter-conf{background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:3px 9px;font-size:10px;color:#856404;font-weight:600;}
+  @media print{
+    #rpt-bar{display:none!important;}
+    #rpt-overlay{position:static!important;background:#fff!important;}
+    #rpt-scroll{padding:0!important;overflow:visible!important;}
+    .rpt-page{box-shadow:none!important;margin:0!important;page-break-after:always;}
+    .rpt-page:last-child{page-break-after:avoid;}
+    *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  }
 </style>
-</head><body>
 
-<div class="print-bar no-print">
-  <h2>📄 Relatório DISC — ${r.name}</h2>
-  <div class="pbtns">
-    <button class="pbtn pbtn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
-    <button class="pbtn pbtn-close" onclick="window.close()">✕ Fechar</button>
-  </div>
-</div>
-
-<!-- ════ PÁGINA 1 ════ -->
-<div class="page">
-
-  <div class="rpt-header">
-    <div class="rpt-header-left">
-      <h1>Avaliação DISC</h1>
-      <p>Relatório Individual de Perfil Comportamental</p>
-    </div>
-    <div class="rpt-header-right">
-
-      <div class="dt">${date}</div>
+<div id="rpt-overlay">
+  <div id="rpt-bar">
+    <h2>📄 Relatório DISC — ${r.name}</h2>
+    <div id="rpt-bar-btns">
+      <button class="rpt-bbtn rpt-bbtn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+      <button class="rpt-bbtn rpt-bbtn-close" onclick="closeReport()">✕ Fechar</button>
     </div>
   </div>
+  <div id="rpt-scroll">
 
-  <div class="info-strip" style="background:${dbg}">
-    <div class="info-left">
-      <div class="info-avatar">${dominant}</div>
-      <div>
-        <div class="info-name">${r.name}</div>
-        <div class="info-email">${r.email}</div>
-        <div class="info-cargo"></div>
+  <!-- PÁGINA 1 -->
+  <div class="rpt-page">
+    <div class="rh">
+      <div><h1>Avaliação DISC</h1><p>Relatório Individual de Perfil Comportamental</p></div>
+      <div class="rh-date">${date}</div>
+    </div>
+    <div class="ri">
+      <div class="ri-left">
+        <div class="ri-av">${dominant}</div>
+        <div>
+          <div class="ri-name">${r.name}</div>
+          <div class="ri-sub">${r.email}</div>
+        </div>
       </div>
+      <div class="ri-badge">Perfil ${dominant} · ${p.name}</div>
     </div>
-    <div class="profile-badge">Perfil ${dominant} · ${p.name}</div>
-  </div>
-
-  <!-- SCORES -->
-  <div class="section">
-    <div class="section-title">Resultado Geral</div>
-    <div class="score-cards">
-      ${['D','I','S','C'].map(k=>{
-        const kc={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
-        const kbg={D:'#FDF2F0',I:'#FEF9F0',S:'#F0FBF4',C:'#EBF5FB'};
-        return`<div class="sc ${k===dominant?'dominant':''}" style="background:${kbg[k]}">
-          <div class="sc-letter" style="color:${kc[k]}">${k}</div>
-          <div class="sc-name" style="color:${kc[k]}">${PROFILES[k].name}</div>
-          <div class="sc-pct" style="color:${kc[k]}">${pct[k]}%</div>
-          <div class="sc-resp">${counts[k]} respostas</div>
-        </div>`;
-      }).join('')}
-    </div>
-  </div>
-
-  <!-- RADAR + BARS + DESC -->
-  <div class="section" style="padding-top:0">
-    <div class="main-grid">
-      <div class="radar-area">
-        ${radarPrint(pct,150)}
-        <div class="radar-legend">
-          ${['D','I','S','C'].map(k=>{
-            const kc={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
-            return`<div class="rl-row">
+    <div class="rs">
+      <div class="rs-title">Resultado Geral</div>
+      <div class="rsc">
+        ${['D','I','S','C'].map(k=>`<div class="rsc-card ${k===dominant?'dom':''}" style="background:${kbg[k]}">
+          <div class="rsc-letter" style="color:${kc[k]}">${k}</div>
+          <div class="rsc-name" style="color:${kc[k]}">${PROFILES[k].name}</div>
+          <div class="rsc-pct" style="color:${kc[k]}">${pct[k]}%</div>
+          <div class="rsc-resp">${counts[k]} respostas</div>
+        </div>`).join('')}
+      </div>
+      <div class="rmg">
+        <div class="rmg-left">
+          ${radarPrint(pct,150)}
+          <div style="width:100%;display:flex;flex-direction:column;gap:5px;margin-top:4px">
+            ${['D','I','S','C'].map(k=>`<div class="rl-row">
               <div class="rl-dot" style="background:${kc[k]}"></div>
-              <span style="color:${kc[k]};font-weight:700;width:14px">${k}</span>
+              <span style="color:${kc[k]};font-weight:700;width:14px;font-size:10px">${k}</span>
               <div class="rl-bar"><div class="rl-fill" style="width:${pct[k]}%;background:${kc[k]}"></div></div>
               <div class="rl-pct" style="color:${kc[k]}">${pct[k]}%</div>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>
-      <div>
-        <div class="desc-block">${p.desc}</div>
-        <div class="two-col">
-          <div class="info-box" style="background:#f0fbf4;border:1px solid #c8e6c9">
-            <div class="ib-title" style="color:#1e6b3a">✅ Pontos Fortes</div>
-            ${p.strengths.map(s=>`<div class="ib-item" style="color:#1a3d24">• ${s}</div>`).join('')}
-          </div>
-          <div class="info-box" style="background:#fdf2f0;border:1px solid #ffcdd2">
-            <div class="ib-title" style="color:#c62828">⚠️ Pontos de Atenção</div>
-            ${p.challenges.map(s=>`<div class="ib-item" style="color:#5a1a14">• ${s}</div>`).join('')}
+            </div>`).join('')}
           </div>
         </div>
-        <div class="analyst-box">
-          <div class="ab-title">🧑‍💼 Orientação ao Candidato</div>
-          <div class="ab-text">${p.analyst}</div>
-        </div>
-        <div class="rec-box">
-          <div class="rb-title">📋 Recomendação ao Recrutador</div>
-          <div class="rb-text">${rec[dominant]}</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="rpt-footer">
-    <div class="rf-left">Avaliação DISC · ${r.name} · Gerado em ${date}</div>
-    <div class="rf-conf">🔒 Documento Confidencial · Pág. 1/2</div>
-  </div>
-</div>
-
-<!-- ════ PÁGINA 2 ════ -->
-<div class="page">
-
-  <div class="rpt-header">
-    <div class="rpt-header-left">
-      <h1>Guia de Referência DISC</h1>
-      <p>Comparativo dos quatro perfis comportamentais</p>
-    </div>
-    <div class="rpt-header-right">
-
-      <div class="dt">Candidata: ${r.name}</div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Os Quatro Perfis DISC</div>
-    <div class="guide-grid">
-      ${['D','I','S','C'].map(k=>{
-        const kc={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
-        const kbg={D:'#FDF2F0',I:'#FEF9F0',S:'#F0FBF4',C:'#EBF5FB'};
-        const ideal={D:'Liderança, metas, decisão estratégica, projetos de alta pressão.',I:'Comunicação, engajamento, treinamentos, vendas e relacionamento.',S:'Processos, suporte, análise de rotina, qualidade relacional.',C:'Auditoria, dados, controle de qualidade, análise técnica.'};
-        const pressure={D:'Torna-se mais assertivo e controlador. Pode desconsiderar a equipe.',I:'Fica agitado, fala em excesso, perde o foco nas entregas.',S:'Retrai-se, evita conflito, tende à passividade e acomodação.',C:'Analisa em excesso, trava nas decisões, eleva o nível crítico.'};
-        const isDom=k===dominant;
-        return`<div class="guide-card" style="background:${kbg[k]};border-color:${isDom?kc[k]:'#e8e8e8'}${isDom?';box-shadow:0 0 0 2px '+kc[k]+'40':''}">
-          <div class="gc-header">
-            <div class="gc-badge" style="background:${kc[k]}">${k}</div>
-            <div>
-              <div class="gc-name" style="color:${kc[k]}">${PROFILES[k].name} ${isDom?'★ Perfil da Candidata':''}</div>
-              <div class="gc-pct">${pct[k]}% das respostas · ${counts[k]} de 20</div>
+        <div>
+          <div class="rb-desc">${p.desc}</div>
+          <div class="r2col">
+            <div class="r-box" style="background:#f0fbf4;border:1px solid #c8e6c9">
+              <div class="r-box-title" style="color:#1e6b3a">✅ Pontos Fortes</div>
+              ${p.strengths.map(s=>`<div class="r-box-item" style="color:#1a3d24">• ${s}</div>`).join('')}
+            </div>
+            <div class="r-box" style="background:#fdf2f0;border:1px solid #ffcdd2">
+              <div class="r-box-title" style="color:#c62828">⚠️ Pontos de Atenção</div>
+              ${p.challenges.map(s=>`<div class="r-box-item" style="color:#5a1a14">• ${s}</div>`).join('')}
             </div>
           </div>
-          <div class="gc-desc" style="border-color:${kc[k]};color:#444">${PROFILES[k].desc}</div>
-          <div class="gc-section" style="color:${kc[k]}">Ideal para</div>
-          <div class="gc-item" style="color:#333">${ideal[k]}</div>
-          <div class="gc-section" style="color:#e74c3c">Sob Pressão</div>
-          <div class="gc-item" style="color:#555">${pressure[k]}</div>
-          <div class="gc-section" style="color:#1e8449">Pontos Fortes</div>
-          ${PROFILES[k].strengths.slice(0,3).map(s=>`<div class="gc-item" style="color:#1a3d24">• ${s}</div>`).join('')}
-        </div>`;
-      }).join('')}
+          <div class="r-analyst">
+            <div class="r-analyst-title">🧑‍💼 Orientação ao Candidato</div>
+            <div class="r-analyst-text">${p.analyst}</div>
+          </div>
+          <div class="r-rec">
+            <div class="r-rec-title">📋 Recomendação ao Recrutador</div>
+            <div class="r-rec-text">${rec[dominant]}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rfooter">
+      <div class="rfooter-l">Avaliação DISC · ${r.name} · ${date}</div>
+      <div class="rfooter-conf">🔒 Documento Confidencial · Pág. 1/2</div>
     </div>
   </div>
 
-  <!-- Resumo tabela -->
-  <div class="section" style="padding-top:0">
-    <div class="section-title">Resumo Comparativo</div>
-    <table style="width:100%;border-collapse:collapse;font-size:11px;">
-      <tr style="background:#1a1a2e;color:#fff">
-        <th style="padding:8px 10px;text-align:left;border-radius:6px 0 0 0">Dimensão</th>
-        <th style="padding:8px 10px;text-align:left">Motivações</th>
-        <th style="padding:8px 10px;text-align:left">Comunicação</th>
-        <th style="padding:8px 10px;text-align:left;border-radius:0 6px 0 0">Desenvolvimento</th>
-      </tr>
-      ${['D','I','S','C'].map((k,i)=>{
-        const kc={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
-        const kbg={D:'#FDF2F0',I:'#FEF9F0',S:'#F0FBF4',C:'#EBF5FB'};
-        const mot={D:'Resultados, autonomia, desafios',I:'Reconhecimento, interação, variedade',S:'Estabilidade, harmonia, equipe',C:'Qualidade, precisão, lógica'};
-        const com={D:'Objetiva, direta e rápida',I:'Expressiva, aberta e interativa',S:'Gentil, paciente e clara',C:'Estruturada, com dados e detalhes'};
-        const dev={D:'Escuta ativa e empatia',I:'Organização e atenção a detalhes',S:'Assertividade e proatividade',C:'Agilidade e flexibilidade'};
-        const isDom=k===dominant;
-        return`<tr style="background:${isDom?kbg[k]:i%2===0?'#fafafa':'#fff'}${isDom?';border-left:3px solid '+kc[k]:''}">
-          <td style="padding:7px 10px;font-weight:800;color:${kc[k]}">${k} — ${PROFILES[k].name}</td>
-          <td style="padding:7px 10px;color:#333">${mot[k]}</td>
-          <td style="padding:7px 10px;color:#333">${com[k]}</td>
-          <td style="padding:7px 10px;color:#333">${dev[k]}</td>
-        </tr>`;
-      }).join('')}
-    </table>
-  </div>
-
-  <div class="section" style="padding-top:8px">
-    <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:12px 16px;font-size:11px;color:#856404;line-height:1.6">
-      <strong>🔒 Documento Confidencial</strong> · Este relatório é de uso exclusivo do departamento de Recursos Humanos d
-      Não deve ser compartilhado externamente sem autorização prévia. As informações contidas refletem o perfil comportamental 
-      identificado na avaliação DISC e devem ser utilizadas como ferramenta de desenvolvimento, não de eliminação.
+  <!-- PÁGINA 2 -->
+  <div class="rpt-page">
+    <div class="rh">
+      <div><h1>Guia de Referência DISC</h1><p>Comparativo dos quatro perfis comportamentais</p></div>
+      <div class="rh-date">Candidata: ${r.name}</div>
+    </div>
+    <div class="rs">
+      <div class="rs-title">Os Quatro Perfis DISC</div>
+      <div class="rg-grid">
+        ${['D','I','S','C'].map(k=>`<div class="rg-card" style="background:${kbg[k]};${k===dominant?'border-color:'+kc[k]+';box-shadow:0 0 0 2px '+kc[k]+'30':''}">
+          <div class="rg-head">
+            <div class="rg-badge" style="background:${kc[k]}">${k}</div>
+            <div>
+              <div class="rg-title" style="color:${kc[k]}">${PROFILES[k].name}${k===dominant?' ★':''}</div>
+              <div class="rg-pct">${pct[k]}% · ${counts[k]} de 20</div>
+            </div>
+          </div>
+          <div class="rg-desc" style="border-color:${kc[k]}">${PROFILES[k].desc}</div>
+          <div class="rg-sec" style="color:${kc[k]}">Ideal para</div>
+          <div class="rg-item" style="color:#333">${ideal[k]}</div>
+          <div class="rg-sec" style="color:#e74c3c">Sob Pressão</div>
+          <div class="rg-item" style="color:#555">${pressure[k]}</div>
+          <div class="rg-sec" style="color:#1e8449">Pontos Fortes</div>
+          ${PROFILES[k].strengths.slice(0,3).map(s=>`<div class="rg-item" style="color:#1a3d24">• ${s}</div>`).join('')}
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="rs" style="padding-top:0">
+      <div class="rs-title">Resumo Comparativo</div>
+      <table class="r-table">
+        <tr><th>Perfil</th><th>Motivações</th><th>Comunicação</th><th>Desenvolvimento</th></tr>
+        ${['D','I','S','C'].map((k,i)=>`<tr style="background:${k===dominant?kbg[k]:i%2===0?'#fafafa':'#fff'}${k===dominant?';border-left:3px solid '+kc[k]:''}">
+          <td style="font-weight:800;color:${kc[k]}">${k} — ${PROFILES[k].name}</td>
+          <td>${mot[k]}</td><td>${com[k]}</td><td>${dev[k]}</td>
+        </tr>`).join('')}
+      </table>
+    </div>
+    <div class="rs" style="padding-top:0">
+      <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:10px 14px;font-size:11px;color:#856404;line-height:1.6">
+        <strong>🔒 Documento Confidencial</strong> · Este relatório é de uso exclusivo do departamento de Recursos Humanos. Não deve ser compartilhado externamente sem autorização. As informações refletem o perfil comportamental identificado na avaliação DISC e devem ser utilizadas como ferramenta de desenvolvimento, não de eliminação.
+      </div>
+    </div>
+    <div class="rfooter">
+      <div class="rfooter-l">Avaliação DISC · ${r.name} · ${date}</div>
+      <div class="rfooter-conf">🔒 Documento Confidencial · Pág. 2/2</div>
     </div>
   </div>
 
-  <div class="rpt-footer">
-    <div class="rf-left">Avaliação DISC · ${r.name} · Gerado em ${date}</div>
-    <div class="rf-conf">🔒 Documento Confidencial · Pág. 2/2</div>
   </div>
-</div>
+</div>`;
 
-</body></html>`);
-  win.document.close();
+  // Remove existing overlay if any
+  const existing=document.getElementById('rpt-overlay');
+  if(existing) existing.parentNode.removeChild(existing);
+  // Inject into page
+  const div=document.createElement('div');
+  div.innerHTML=reportHTML;
+  document.body.appendChild(div.firstElementChild);
+}
+
+function closeReport(){
+  const el=document.getElementById('rpt-overlay');
+  if(el) el.parentNode.removeChild(el);
 }
 
 // ── MAIN RENDER ──
