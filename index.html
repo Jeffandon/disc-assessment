@@ -572,7 +572,7 @@ function renderAdmin(){
           <div class="cand-right">
             <span class="profile-pill" style="background:${p.bg};color:${p.color}">${p.icon} ${p.name}</span>
             <span class="cand-date">${date}</span>
-            <button onclick="event.stopPropagation();generateReport(r)" style="padding:5px 12px;border-radius:6px;border:none;background:linear-gradient(135deg,#6c63ff,#4834d4);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif">📄 Relatório</button>
+            <a href="https://zjwiwxldpkqsdorhfbqr.supabase.co/functions/v1/disc-report?id=${r.id}" target="_blank" onclick="event.stopPropagation()" style="padding:6px 14px;border-radius:6px;background:linear-gradient(135deg,#6c63ff,#4834d4);color:#fff;font-size:11px;font-weight:700;text-decoration:none;font-family:Arial,sans-serif;display:inline-block">📄 Relatório</a>
             <span class="cand-chev" id="chev${i}">⌄</span>
           </div>
         </div>
@@ -679,10 +679,7 @@ function setAdminSearch(q){
   render();
 }
 
-function generateReport(r){
-  var url='https://zjwiwxldpkqsdorhfbqr.supabase.co/functions/v1/disc-report?id='+r.id;
-  window.open(url,'_blank');
-}
+
 
 
 // ── MAIN RENDER ──
