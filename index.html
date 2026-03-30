@@ -259,7 +259,12 @@ function resultCardHTML(r, compact=false){
 async function saveResult(data){
   if(!SCRIPT_URL||SCRIPT_URL.includes("COLE")){return;}
   try{
-    await fetch(SCRIPT_URL,{method:"POST",body:JSON.stringify({action:"save",...data})});
+    await fetch(SCRIPT_URL,{
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"text/plain"},
+      body:JSON.stringify({action:"save",...data})
+    });
   }catch(e){}
 }
 
