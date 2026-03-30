@@ -259,12 +259,17 @@ function resultCardHTML(r, compact=false){
 async function saveResult(data){
   if(!SCRIPT_URL||SCRIPT_URL.includes("COLE")){return;}
   try{
-    await fetch(SCRIPT_URL,{
-      method:"POST",
-      mode:"no-cors",
-      headers:{"Content-Type":"text/plain"},
-      body:JSON.stringify({action:"save",...data})
+    // Usa GET com parâmetros — único método que funciona sem CORS no Apps Script
+    const params=new URLSearchParams({
+      action:"save",
+      token:ADMIN_TOKEN,
+      name:data.name||"",
+      email:data.email||"",
+      submittedAt:data.submittedAt||"",
+      answers:JSON.stringify(data.answers||{})
     });
+    // no-cors: não lemos a resposta, mas o dado chega no servidor
+    await fetch(`${SCRIPT_URL}?${params.toString()}`,{method:"GET",mode:"no-cors"});
   }catch(e){}
 }
 
