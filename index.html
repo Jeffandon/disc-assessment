@@ -373,14 +373,6 @@ function printReport(r){
 }
 
 // ── SUPABASE ──
-async function salvarResposta(dados){
-  const res=await fetch(`${SB_URL}/rest/v1/disc_respostas`,{
-    method:'POST',
-    headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'return=representation'},
-    body:JSON.stringify(dados)
-  });
-  return res.json();
-}
 
 async function buscarResultados(){
   const res=await fetch(`${SB_URL}/rest/v1/disc_respostas?order=criado_em.desc`,{
@@ -392,10 +384,24 @@ async function buscarResultados(){
 // ── HANDLERS ──
 async function submitForm(){
   if(Object.keys(ST.respostas).length<20)return;
-  set({loading:true});
-  const dados={nome:ST.nome.trim(),email:ST.email.trim(),respostas:ST.respostas};
-  const result=await salvarResposta(dados);
-  set({loading:false,resultadoAtual:Array.isArray(result)?result[0]:result,view:'resultado'});
+  set({loading:true,erro:''});
+  try{
+    const dados={nome:ST.nome.trim(),email:ST.email.trim(),respostas:ST.respostas};
+    const res=await fetch(SB_URL+'/rest/v1/disc_respostas',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'return=representation'},
+      body:JSON.stringify(dados)
+    });
+    const result=await res.json();
+    if(!res.ok){
+      set({loading:false,erro:'Erro ao salvar: '+JSON.stringify(result)});
+      return;
+    }
+    const row=Array.isArray(result)?result[0]:result;
+    set({loading:false,resultadoAtual:row,view:'resultado'});
+  }catch(e){
+    set({loading:false,erro:'Erro de conexão: '+e.message});
+  }
 }
 
 async function loginAdmin(){
