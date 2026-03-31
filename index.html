@@ -566,7 +566,7 @@ function renderAdmin(){
     </div>
     ${ST.loading?`<div class="loading-adm">⏳ Carregando...</div>`:
       rs.length===0?`<div class="empty-adm"><div style="font-size:48px;margin-bottom:12px">📭</div><div>Nenhuma resposta ainda.</div></div>`:
-      rs.map((r,i)=>{
+      (_RS=rs,rs).map((r,i)=>{
         const {dom,pct}=calcScore(r.respostas);
         const p=PROF[dom];
         const dt=r.criado_em?new Date(r.criado_em).toLocaleString('pt-BR'):'';
@@ -582,7 +582,7 @@ function renderAdmin(){
             <div class="cand-right">
               <span class="pill" style="background:${p.bg};color:${p.color}">${p.icon} ${p.name}</span>
               <span class="cand-dt">${dt}</span>
-              <button class="btn-print" onclick="event.stopPropagation();printReport(${JSON.stringify(r).replace(/"/g,'&quot;')})">
+              <button class="btn-print" onclick="event.stopPropagation();printReport(_RS[${i}])">
                 🖨️ Imprimir Relatório
               </button>
               <span class="chev" id="cv${i}">⌄</span>
@@ -613,6 +613,7 @@ function draw(){
   }</div>`;
 }
 
+var _RS=[];
 draw();
 </script>
 </body>
