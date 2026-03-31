@@ -279,98 +279,121 @@ function printReport(r){
   const KB={D:'#FDF2F0',I:'#FEF9F0',S:'#F0FBF4',C:'#EBF5FB'};
 
   const scoreCards=['D','I','S','C'].map(k=>`
-    <div style="border-radius:8px;padding:12px;text-align:center;background:${KB[k]};border:2px solid ${k===dom?KC[k]:'#eee'}">
-      <div style="font-size:18px;font-weight:900;color:${KC[k]};font-family:Arial">${k}</div>
-      <div style="font-size:9px;color:${KC[k]};margin-top:1px">${PROF[k].name}</div>
-      <div style="font-size:22px;font-weight:800;color:${KC[k]};margin:4px 0">${pct[k]}%</div>
-      <div style="font-size:9px;color:#999">${counts[k]} respostas</div>
-    </div>`).join('');
+    <td style="width:25%;padding:0 4px">
+      <div style="border-radius:8px;padding:12px 8px;text-align:center;background:${KB[k]};border:2px solid ${k===dom?KC[k]:'#e0e0e0'}">
+        <div style="font-size:20px;font-weight:900;color:${KC[k]};font-family:Arial">${k}</div>
+        <div style="font-size:9px;color:${KC[k]};margin-top:2px">${PROF[k].name}</div>
+        <div style="font-size:22px;font-weight:800;color:${KC[k]};margin:4px 0">${pct[k]}%</div>
+        <div style="font-size:9px;color:#999">${counts[k]} respostas</div>
+      </div>
+    </td>`).join('');
 
   const barras=['D','I','S','C'].map(k=>`
-    <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-      <div style="width:9px;height:9px;border-radius:2px;background:${KC[k]};flex-shrink:0"></div>
-      <span style="color:${KC[k]};font-weight:700;width:14px;font-size:10px">${k}</span>
-      <div style="flex:1;height:6px;background:#f0f0f0;border-radius:3px;overflow:hidden">
-        <div style="width:${pct[k]}%;height:100%;background:${KC[k]};border-radius:3px"></div>
-      </div>
-      <span style="width:26px;text-align:right;color:${KC[k]};font-size:10px;font-weight:700">${pct[k]}%</span>
-    </div>`).join('');
+    <tr>
+      <td style="width:20px;padding:0 0 6px 0">
+        <div style="width:10px;height:10px;border-radius:2px;background:${KC[k]}"></div>
+      </td>
+      <td style="width:14px;padding:0 4px 6px;font-size:10px;font-weight:700;color:${KC[k]}">${k}</td>
+      <td style="padding:0 0 6px">
+        <div style="height:7px;background:#f0f0f0;border-radius:3px;overflow:hidden">
+          <div style="width:${pct[k]}%;height:100%;background:${KC[k]};border-radius:3px"></div>
+        </div>
+      </td>
+      <td style="width:32px;padding:0 0 6px 4px;text-align:right;font-size:10px;font-weight:700;color:${KC[k]}">${pct[k]}%</td>
+    </tr>`).join('');
 
-  // Build SVG radar for print (pure SVG, no JS)
-  const sz=150,cx=75,cy=75,rv=75*0.37;
+  // SVG radar
+  const sz=140,cx=70,cy=70,rv=70*0.37;
   const lb=['D','I','S','C'],ag=[-90,0,90,180];
   const CO={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
   function ptf(k,f){f=f===undefined?1:f;const i=lb.indexOf(k),a=ag[i]*Math.PI/180,v=pct[k]/100*rv*f;return[cx+v*Math.cos(a),cy+v*Math.sin(a)];}
   function axf(i,f){f=f===undefined?1:f;const a=ag[i]*Math.PI/180;return[cx+rv*f*Math.cos(a),cy+rv*f*Math.sin(a)];}
-  let svgR=`<svg viewBox="0 0 150 150" width="150" height="150" xmlns="http://www.w3.org/2000/svg">`;
-  [.25,.5,.75,1].forEach(f=>{const ps=lb.map((_,i)=>axf(i,f).join(',')).join(' ');svgR+=`<polygon points="${ps}" fill="none" stroke="#ddd" stroke-width="0.5"/>`;});
-  for(let i=0;i<4;i++){const a=axf(i);svgR+=`<line x1="${cx}" y1="${cy}" x2="${a[0]}" y2="${a[1]}" stroke="#ddd" stroke-width="0.4"/>`;}
-  svgR+=`<polygon points="${lb.map(k=>ptf(k).join(',')).join(' ')}" fill="rgba(108,99,255,.15)" stroke="#6c63ff" stroke-width="1.5"/>`;
-  lb.forEach(k=>{const pp=ptf(k);svgR+=`<circle cx="${pp[0]}" cy="${pp[1]}" r="3" fill="${CO[k]}"/>`;});
-  lb.forEach((k,i)=>{const a=axf(i,1.22);svgR+=`<text x="${a[0]}" y="${+a[1]+4}" text-anchor="middle" font-size="11" font-weight="bold" fill="${CO[k]}" font-family="Arial">${k}</text>`;});
-  svgR+='</svg>';
+  let svg=`<svg viewBox="0 0 140 140" width="140" height="140" xmlns="http://www.w3.org/2000/svg">`;
+  [.25,.5,.75,1].forEach(f=>{const ps=lb.map((_,i)=>axf(i,f).join(',')).join(' ');svg+=`<polygon points="${ps}" fill="none" stroke="#ddd" stroke-width="0.5"/>`;});
+  for(let i=0;i<4;i++){const a=axf(i);svg+=`<line x1="${cx}" y1="${cy}" x2="${a[0]}" y2="${a[1]}" stroke="#ddd" stroke-width="0.4"/>`;}
+  svg+=`<polygon points="${lb.map(k=>ptf(k).join(',')).join(' ')}" fill="rgba(108,99,255,.15)" stroke="#6c63ff" stroke-width="1.5"/>`;
+  lb.forEach(k=>{const pp=ptf(k);svg+=`<circle cx="${pp[0]}" cy="${pp[1]}" r="3" fill="${CO[k]}"/>`;});
+  lb.forEach((k,i)=>{const a=axf(i,1.22);svg+=`<text x="${a[0]}" y="${+a[1]+4}" text-anchor="middle" font-size="11" font-weight="bold" fill="${CO[k]}" font-family="Arial">${k}</text>`;});
+  svg+='</svg>';
 
-  document.getElementById('print-area').innerHTML=`
-  <div class="p-page">
-    <div style="background:linear-gradient(135deg,#0f0c29,#0f3460);padding:22px 28px;display:flex;justify-content:space-between;align-items:center">
-      <div>
-        <div style="font-size:20px;font-weight:800;color:#fff">Avaliação DISC</div>
+  const html=`
+  <div style="font-family:Arial,sans-serif;font-size:13px;color:#1a1a2e;background:#fff;width:190mm;margin:0 auto">
+    <!-- HEADER -->
+    <div style="background:#0f0c29;padding:20px 24px;display:table;width:100%;table-layout:fixed">
+      <div style="display:table-cell;vertical-align:middle">
+        <div style="font-size:18px;font-weight:800;color:#fff">Avaliação DISC</div>
         <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">Relatório Individual de Perfil Comportamental</div>
       </div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)">${dt}</div>
+      <div style="display:table-cell;vertical-align:middle;text-align:right">
+        <div style="font-size:11px;color:rgba(255,255,255,.5)">${dt}</div>
+      </div>
     </div>
-    <div style="padding:12px 28px;display:flex;justify-content:space-between;align-items:center;background:${p.bg};border-bottom:3px solid ${p.color}">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:42px;height:42px;border-radius:9px;background:${p.color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0;font-family:Arial">${dom}</div>
-        <div>
-          <div style="font-size:16px;font-weight:800;color:#1a1a2e">${r.nome}</div>
+    <!-- INFO STRIP -->
+    <div style="background:${p.bg};border-bottom:3px solid ${p.color};padding:12px 24px;display:table;width:100%;table-layout:fixed">
+      <div style="display:table-cell;vertical-align:middle">
+        <div style="display:inline-block;width:40px;height:40px;border-radius:9px;background:${p.color};color:#fff;text-align:center;line-height:40px;font-size:18px;font-weight:900;margin-right:10px;vertical-align:middle">${dom}</div>
+        <div style="display:inline-block;vertical-align:middle">
+          <div style="font-size:15px;font-weight:800;color:#1a1a2e">${r.nome}</div>
           <div style="font-size:11px;color:#777;margin-top:1px">${r.email}</div>
         </div>
       </div>
-      <div style="background:${p.color};color:#fff;border-radius:18px;padding:6px 16px;font-size:12px;font-weight:800">Perfil ${dom} · ${p.name}</div>
-    </div>
-    <div style="padding:14px 28px">
-      <div style="font-size:10px;font-weight:800;color:#aaa;letter-spacing:2px;text-transform:uppercase;padding-bottom:7px;border-bottom:1px solid #eee;margin-bottom:12px">Resultado Geral</div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">${scoreCards}</div>
-      <div style="display:grid;grid-template-columns:155px 1fr;gap:16px">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
-          ${svgR}
-          <div style="width:100%;margin-top:4px">${barras}</div>
-        </div>
-        <div>
-          <div style="background:${p.bg};border-left:4px solid ${p.color};padding:10px 12px;border-radius:0 6px 6px 0;font-style:italic;font-size:12px;line-height:1.65;color:#333;margin-bottom:10px">${p.desc}</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px">
-            <div style="background:#f0fbf4;border:1px solid #c8e6c9;border-radius:6px;padding:9px">
-              <div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#1e6b3a;margin-bottom:5px">✅ Pontos Fortes</div>
-              ${p.fortes.map(f=>`<div style="font-size:11px;color:#1a3d24;margin-bottom:3px">• ${f}</div>`).join('')}
-            </div>
-            <div style="background:#fdf2f0;border:1px solid #ffcdd2;border-radius:6px;padding:9px">
-              <div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#c62828;margin-bottom:5px">⚠️ Pontos de Atenção</div>
-              ${p.atencao.map(a=>`<div style="font-size:11px;color:#5a1a14;margin-bottom:3px">• ${a}</div>`).join('')}
-            </div>
-          </div>
-          <div style="background:#eef4ff;border-left:4px solid #4a6cf7;border-radius:0 6px 6px 0;padding:9px 12px;margin-bottom:8px">
-            <div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a237e;margin-bottom:4px;text-transform:uppercase">🧑‍💼 Orientação ao Candidato</div>
-            <div style="font-size:12px;color:#1a237e;line-height:1.6">${p.candidato}</div>
-          </div>
-          <div style="background:#f0fbf4;border-left:4px solid #1e8449;border-radius:0 6px 6px 0;padding:9px 12px">
-            <div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a3d24;margin-bottom:4px;text-transform:uppercase">📋 Recomendação ao Recrutador</div>
-            <div style="font-size:12px;color:#1a3d24;line-height:1.6">${p.recrutador}</div>
-          </div>
-        </div>
+      <div style="display:table-cell;vertical-align:middle;text-align:right">
+        <div style="background:${p.color};color:#fff;border-radius:16px;padding:6px 14px;font-size:12px;font-weight:800;display:inline-block">Perfil ${dom} · ${p.name}</div>
       </div>
     </div>
-    <div style="background:#f8f9fc;border-top:1px solid #eee;padding:9px 28px;display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-      <div style="font-size:10px;color:#aaa">Avaliação DISC · ${r.nome} · ${dt}</div>
-      <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:3px 8px;font-size:10px;color:#856404;font-weight:700">🔒 Documento Confidencial</div>
+    <!-- SCORES -->
+    <div style="padding:14px 24px">
+      <div style="font-size:9px;font-weight:800;color:#aaa;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid #eee;padding-bottom:7px;margin-bottom:12px">RESULTADO GERAL</div>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:14px"><tr>${scoreCards}</tr></table>
+      <!-- RADAR + CONTENT -->
+      <table style="width:100%;border-collapse:collapse">
+        <tr>
+          <td style="width:160px;vertical-align:top;padding-right:16px">
+            ${svg}
+            <table style="width:100%;border-collapse:collapse;margin-top:6px">${barras}</table>
+          </td>
+          <td style="vertical-align:top">
+            <div style="background:${p.bg};border-left:4px solid ${p.color};padding:10px 12px;border-radius:0 6px 6px 0;font-style:italic;font-size:12px;line-height:1.65;color:#333;margin-bottom:10px">${p.desc}</div>
+            <table style="width:100%;border-collapse:collapse;margin-bottom:10px">
+              <tr>
+                <td style="width:50%;padding-right:6px;vertical-align:top">
+                  <div style="background:#f0fbf4;border:1px solid #c8e6c9;border-radius:6px;padding:9px">
+                    <div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#1e6b3a;margin-bottom:6px">✅ PONTOS FORTES</div>
+                    ${p.fortes.map(f=>`<div style="font-size:11px;color:#1a3d24;margin-bottom:3px">• ${f}</div>`).join('')}
+                  </div>
+                </td>
+                <td style="width:50%;padding-left:6px;vertical-align:top">
+                  <div style="background:#fdf2f0;border:1px solid #ffcdd2;border-radius:6px;padding:9px">
+                    <div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#c62828;margin-bottom:6px">⚠️ PONTOS DE ATENÇÃO</div>
+                    ${p.atencao.map(a=>`<div style="font-size:11px;color:#5a1a14;margin-bottom:3px">• ${a}</div>`).join('')}
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <div style="background:#eef4ff;border-left:4px solid #4a6cf7;border-radius:0 6px 6px 0;padding:9px 12px;margin-bottom:8px">
+              <div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a237e;margin-bottom:4px;text-transform:uppercase">🧑‍💼 ORIENTAÇÃO AO CANDIDATO</div>
+              <div style="font-size:11.5px;color:#1a237e;line-height:1.6">${p.candidato}</div>
+            </div>
+            <div style="background:#f0fbf4;border-left:4px solid #1e8449;border-radius:0 6px 6px 0;padding:9px 12px">
+              <div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a3d24;margin-bottom:4px;text-transform:uppercase">📋 RECOMENDAÇÃO AO RECRUTADOR</div>
+              <div style="font-size:11.5px;color:#1a3d24;line-height:1.6">${p.recrutador}</div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <!-- FOOTER -->
+    <div style="background:#f8f9fc;border-top:1px solid #eee;padding:9px 24px;display:table;width:100%;table-layout:fixed;margin-top:8px">
+      <div style="display:table-cell;font-size:10px;color:#aaa">Avaliação DISC · ${r.nome} · ${dt}</div>
+      <div style="display:table-cell;text-align:right"><span style="background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:3px 8px;font-size:10px;color:#856404;font-weight:700">🔒 Documento Confidencial</span></div>
     </div>
   </div>`;
 
+  document.getElementById('print-area').innerHTML=html;
   window.print();
-
-  // Limpa após impressão
-  setTimeout(()=>{ document.getElementById('print-area').innerHTML=''; },2000);
+  setTimeout(()=>{document.getElementById('print-area').innerHTML='';},3000);
 }
+
 
 // ── SUPABASE ──
 
