@@ -2,801 +2,618 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Avaliação DISC</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{min-height:100vh;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);font-family:'Inter',sans-serif;padding:24px 16px;}
-  .wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:16px;}
-  .card{background:#fff;border-radius:20px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden;}
-  .header{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);color:#fff;padding:28px 32px;text-align:center;}
-  .header h1{font-family:'Playfair Display',serif;font-size:28px;margin-bottom:8px;}
-  .header p{font-size:13px;opacity:.7;line-height:1.6;}
-  .tag{display:inline-block;background:rgba(255,255,255,.1);border-radius:20px;padding:5px 16px;font-size:11px;letter-spacing:3px;margin-bottom:14px;color:rgba(255,255,255,.7);}
-  .body{padding:28px 32px;}
-  .disc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px;}
-  .disc-chip{text-align:center;padding:12px 6px;border-radius:12px;}
-  .disc-chip .letter{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;}
-  .disc-chip .lbl{font-size:11px;color:#666;margin-top:3px;}
-  label{font-size:14px;font-weight:700;color:#222;display:block;margin-bottom:8px;}
-  input[type=text],input[type=email],input[type=password]{width:100%;padding:12px 14px;border-radius:10px;border:2px solid #e0e0e0;font-size:15px;font-family:'Inter',sans-serif;outline:none;transition:border .2s;margin-bottom:18px;}
-  input:focus{border-color:#0f3460;}
-  .btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:.5px;font-family:'Inter',sans-serif;transition:opacity .2s;}
-  .btn-primary{background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;}
-  .btn-green{background:linear-gradient(135deg,#1E8449,#27AE60);color:#fff;}
-  .btn-ghost{background:transparent;color:#666;border:2px solid #e0e0e0;margin-top:10px;}
-  .btn:disabled{opacity:.4;cursor:not-allowed;}
-  .error-box{background:#fdf2f0;border:1px solid #f1948a;border-radius:8px;padding:10px 14px;color:#c0392b;font-size:13px;margin-bottom:16px;}
-  .note{font-size:11px;color:#aaa;text-align:center;margin-top:12px;}
+/* ── RESET ── */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);min-height:100vh;padding:24px 16px}
 
-  /* Progress */
-  .prog-bar{height:5px;background:#f0f0f0;}
-  .prog-fill{height:100%;background:linear-gradient(90deg,#1a1a2e,#27AE60);border-radius:0 4px 4px 0;transition:width .3s;}
-  .prog-header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;}
-  .prog-header h2{font-family:'Playfair Display',serif;font-size:18px;color:#1a1a2e;}
-  .prog-count{font-size:22px;font-weight:800;color:#1a1a2e;text-align:right;}
-  .prog-count span{font-size:13px;font-weight:400;color:#999;}
+/* ── FORM & ADMIN (tudo que some na impressão) ── */
+.app-wrap{max-width:700px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:16px}
+.card{background:#fff;border-radius:20px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden}
+.hdr{background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;padding:28px 32px;text-align:center}
+.hdr h1{font-family:'Playfair Display',serif;font-size:26px;margin-bottom:6px}
+.hdr p{font-size:13px;opacity:.7;line-height:1.6}
+.body{padding:28px 32px}
+label{font-size:13px;font-weight:700;color:#333;display:block;margin-bottom:6px}
+input[type=text],input[type=email],input[type=password]{width:100%;padding:12px 14px;border-radius:10px;border:2px solid #e0e0e0;font-size:14px;font-family:'Inter',sans-serif;outline:none;margin-bottom:16px;transition:border .2s}
+input:focus{border-color:#302b63}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-dark{background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff}
+.btn-green{background:linear-gradient(135deg,#1a6b3a,#27ae60);color:#fff}
+.btn-ghost{background:transparent;border:2px solid #e0e0e0;color:#666;margin-top:8px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.err{background:#fdf2f0;border:1px solid #f1948a;border-radius:8px;padding:10px 14px;color:#c0392b;font-size:13px;margin-bottom:14px}
+.note{font-size:11px;color:#aaa;text-align:center;margin-top:10px}
+.admin-link{background:rgba(255,255,255,.07);color:rgba(255,255,255,.4);border:none;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;margin-top:8px}
 
-  /* Questions */
-  .question{margin-bottom:22px;padding:18px;border-radius:14px;border:2px solid #f0f0f0;background:#fafafa;transition:all .2s;}
-  .question.answered{border-color:#c8e6c9;background:#f8fff8;}
-  .q-num{font-size:11px;font-weight:700;color:#999;letter-spacing:1px;margin-bottom:6px;}
-  .q-text{font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:14px;line-height:1.5;}
-  .opt-btn{width:100%;text-align:left;padding:11px 14px;border-radius:10px;border:2px solid #e8e8e8;background:#fff;font-size:14px;color:#444;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:10px;margin-bottom:7px;transition:all .15s;}
-  .opt-btn:hover{border-color:#bbb;background:#f5f5f5;}
-  .opt-btn.sel{font-weight:700;}
-  .radio{width:18px;height:18px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-  .radio-dot{width:8px;height:8px;border-radius:50%;background:#fff;}
+/* ── PROGRESS ── */
+.prog-bar{height:5px;background:#f0f0f0}
+.prog-fill{height:100%;background:linear-gradient(90deg,#1a1a2e,#27ae60);transition:width .3s;border-radius:0 4px 4px 0}
+.prog-top{display:flex;justify-content:space-between;align-items:center;padding:14px 22px}
+.prog-top h2{font-family:'Playfair Display',serif;font-size:17px;color:#1a1a2e}
+.prog-ct{font-size:20px;font-weight:800;color:#1a1a2e}
+.prog-ct span{font-size:13px;font-weight:400;color:#aaa}
 
-  /* Result */
-  .result-card{border-radius:16px;overflow:hidden;border:2px solid;box-shadow:0 4px 20px rgba(0,0,0,.08);}
-  .result-header{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;border-bottom:2px solid;}
-  .result-badge{border-radius:12px;padding:8px 20px;font-weight:800;font-size:17px;letter-spacing:2px;font-family:'Playfair Display',serif;color:#fff;}
-  .result-body{padding:24px;display:flex;flex-wrap:wrap;gap:24px;}
-  .radar-wrap{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;}
-  .legend{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center;}
-  .leg-item{display:flex;align-items:center;gap:4px;font-size:12px;color:#555;}
-  .leg-dot{width:10px;height:10px;border-radius:2px;}
-  .info-cols{flex:1 1 260px;}
-  .italic-block{font-size:14px;color:#333;line-height:1.7;margin-bottom:16px;font-style:italic;border-left:3px solid;padding-left:12px;}
-  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-  .mini-card{border-radius:10px;padding:12px;border:1px solid;}
-  .mini-title{font-weight:700;font-size:13px;margin-bottom:6px;}
-  .mini-item{font-size:12px;color:#333;margin-bottom:4px;}
-  .analyst-box{border-radius:10px;padding:12px;border:1px solid;}
-  .analyst-title{font-weight:700;font-size:13px;margin-bottom:6px;}
-  .analyst-text{font-size:13px;color:#333;line-height:1.6;}
-  .bars{padding:0 24px 24px;}
-  .bar-row{margin-bottom:8px;}
-  .bar-label{display:flex;justify-content:space-between;margin-bottom:3px;font-size:12px;}
-  .bar-track{height:10px;background:#f0f0f0;border-radius:6px;overflow:hidden;}
-  .bar-fill{height:100%;border-radius:6px;transition:width 1s ease;}
+/* ── QUESTIONS ── */
+.q-wrap{padding:18px 22px}
+.q-block{margin-bottom:20px;padding:16px;border-radius:12px;border:2px solid #f0f0f0;background:#fafafa;transition:all .2s}
+.q-block.ans{border-color:#c8e6c9;background:#f8fff8}
+.q-num{font-size:10px;font-weight:700;color:#aaa;letter-spacing:1px;margin-bottom:5px}
+.q-text{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:12px;line-height:1.5}
+.opt{width:100%;text-align:left;padding:10px 13px;border-radius:9px;border:2px solid #e8e8e8;background:#fff;font-size:13px;color:#444;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:9px;margin-bottom:6px;transition:all .15s}
+.opt:hover{border-color:#bbb;background:#f5f5f5}
+.opt.sel{font-weight:700}
+.radio{width:17px;height:17px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.radio-dot{width:7px;height:7px;border-radius:50%;background:#fff}
 
-  /* Admin */
-  .admin-link{margin-top:16px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.45);border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;}
-  .success-note{background:#f8f9fa;border-radius:12px;padding:16px;font-size:13px;color:#666;line-height:1.6;text-align:center;}
-  /* ── ADMIN DASHBOARD ── */
-  .adm{min-height:100vh;background:linear-gradient(135deg,#0a0a1a,#111128,#0d0d22);font-family:'Inter',sans-serif;padding:0;}
-  .adm-topbar{background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.08);padding:16px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;position:sticky;top:0;z-index:10;backdrop-filter:blur(12px);}
-  .adm-logo{font-family:'Playfair Display',serif;font-size:20px;color:#fff;display:flex;align-items:center;gap:10px;}
-  .adm-logo span{background:linear-gradient(135deg,#6c63ff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-  .adm-topbar-right{display:flex;gap:8px;align-items:center;}
-  .adm-btn{padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
-  .adm-btn:hover{background:rgba(255,255,255,.12);color:#fff;}
-  .adm-btn-accent{background:linear-gradient(135deg,#6c63ff,#4834d4);border-color:transparent;color:#fff;}
-  .adm-content{padding:28px;}
-  /* KPI grid */
-  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:28px;}
-  .kpi-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden;transition:border .2s;}
-  .kpi-card:hover{border-color:rgba(255,255,255,.18);}
-  .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,#6c63ff);}
-  .kpi-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
-  .kpi-value{font-size:30px;font-weight:800;color:#fff;font-family:'Playfair Display',serif;line-height:1;}
-  .kpi-sub{font-size:11px;color:rgba(255,255,255,.35);margin-top:5px;}
-  .kpi-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:26px;opacity:.18;}
-  /* Charts row */
-  .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;}
-  @media(max-width:700px){.charts-row{grid-template-columns:1fr;}}
-  .chart-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;}
-  .chart-title{font-size:13px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:16px;letter-spacing:.3px;}
-  /* Bar chart */
-  .bc-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-  .bc-key{width:18px;font-size:12px;font-weight:800;flex-shrink:0;}
-  .bc-track{flex:1;height:24px;background:rgba(255,255,255,.05);border-radius:5px;overflow:hidden;}
-  .bc-fill{height:100%;border-radius:5px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:rgba(255,255,255,.9);transition:width .8s ease;}
-  .bc-pct{width:38px;text-align:right;font-size:12px;font-weight:700;color:rgba(255,255,255,.5);}
-  /* Filters */
-  .filter-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;}
-  .f-btn{padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:transparent;color:rgba(255,255,255,.5);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
-  .f-btn:hover,.f-btn.fa{border-color:var(--fc,#6c63ff);color:var(--fc,#6c63ff);background:rgba(108,99,255,.08);}
-  .f-search{flex:1;min-width:180px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:7px 16px;color:#fff;font-size:13px;font-family:'Inter',sans-serif;outline:none;}
-  .f-search:focus{border-color:rgba(108,99,255,.5);}
-  .f-search::placeholder{color:rgba(255,255,255,.3);}
-  /* Candidate cards */
-  .cand-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;margin-bottom:12px;overflow:hidden;transition:border .2s;}
-  .cand-card:hover{border-color:rgba(255,255,255,.15);}
-  .cand-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;cursor:pointer;flex-wrap:wrap;gap:8px;}
-  .cand-left{display:flex;align-items:center;gap:14px;}
-  .cand-avatar{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;font-family:'Playfair Display',serif;flex-shrink:0;}
-  .cand-name{font-size:15px;font-weight:700;color:#fff;}
-  .cand-email{font-size:12px;color:rgba(255,255,255,.4);margin-top:1px;}
-  .cand-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-  .profile-pill{border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;}
-  .cand-date{font-size:11px;color:rgba(255,255,255,.3);}
-  .cand-chev{color:rgba(255,255,255,.3);font-size:18px;transition:transform .3s;}
-  .cand-chev.open{transform:rotate(180deg);}
-  /* Expanded body */
-  .cand-body{display:none;padding:0 20px 20px;border-top:1px solid rgba(255,255,255,.06);}
-  .cand-body.open{display:block;}
-  .cand-grid{display:grid;grid-template-columns:200px 1fr;gap:20px;padding-top:16px;}
-  @media(max-width:600px){.cand-grid{grid-template-columns:1fr;}}
-  .score-bars{display:flex;flex-direction:column;gap:9px;}
-  .sb-row{display:flex;align-items:center;gap:8px;}
-  .sb-key{width:16px;font-size:11px;font-weight:800;}
-  .sb-track{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;}
-  .sb-fill{height:100%;border-radius:4px;}
-  .sb-pct{width:30px;font-size:11px;color:rgba(255,255,255,.4);text-align:right;}
-  .cand-desc{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;font-style:italic;border-left:3px solid;padding-left:12px;margin-bottom:14px;}
-  .tag-section{margin-bottom:12px;}
-  .tag-title{font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;}
-  .tags{display:flex;flex-wrap:wrap;gap:6px;}
-  .tag{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:500;}
-  .eval-box{border-radius:10px;padding:14px;margin-top:4px;}
-  .eval-title{font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;}
-  .eval-text{font-size:13px;line-height:1.65;}
-  .rec-box{border-radius:10px;padding:14px;margin-top:10px;}
-  /* Empty / loading */
-  .adm-empty{text-align:center;padding:60px 20px;color:rgba(255,255,255,.3);}
-  .adm-loading{text-align:center;padding:60px;color:rgba(255,255,255,.4);font-size:15px;}
-  /* Summary row */
-  .summary-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
-  .sum-chip{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 14px;font-size:12px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:6px;}
-  .sum-chip strong{color:#fff;}
+/* ── RESULT CARD (candidato e admin) ── */
+.res-card{border-radius:14px;overflow:hidden;border:2px solid;box-shadow:0 4px 20px rgba(0,0,0,.08);background:#fff}
+.res-hdr{padding:18px 22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;border-bottom:2px solid}
+.res-badge{border-radius:12px;padding:7px 18px;font-weight:800;font-size:15px;color:#fff;font-family:'Playfair Display',serif}
+.res-body{padding:20px 22px;display:flex;flex-wrap:wrap;gap:20px}
+.radar-side{flex:0 0 auto;display:flex;flex-direction:column;align-items:center}
+.leg{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center}
+.leg-i{display:flex;align-items:center;gap:4px;font-size:11px;color:#555}
+.leg-dot{width:9px;height:9px;border-radius:2px}
+.info-side{flex:1 1 240px}
+.italic-b{font-size:13px;color:#333;line-height:1.7;font-style:italic;border-left:3px solid;padding-left:11px;margin-bottom:14px}
+.two-c{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.mini-b{border-radius:9px;padding:11px;border:1px solid}
+.mini-t{font-weight:700;font-size:12px;margin-bottom:5px}
+.mini-i{font-size:11px;color:#333;margin-bottom:3px}
+.anal-b{border-radius:9px;padding:11px;border:1px solid;margin-bottom:10px}
+.rec-b{border-radius:9px;padding:11px;border:1px solid}
+.bars-sec{padding:0 22px 20px}
+.bar-r{margin-bottom:7px}
+.bar-lbl{display:flex;justify-content:space-between;margin-bottom:3px;font-size:11px}
+.bar-tr{height:9px;background:#f0f0f0;border-radius:5px;overflow:hidden}
+.bar-fill{height:100%;border-radius:5px;transition:width .8s ease}
 
-  @media print {
-    body > * { display: none !important; }
-  }
+/* ── ADMIN ── */
+.adm-wrap{max-width:1000px;width:100%;margin:0 auto}
+.adm-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.adm-title{color:#fff;font-family:'Playfair Display',serif;font-size:22px}
+.adm-sub{color:rgba(255,255,255,.5);font-size:13px;margin-top:3px}
+.adm-btn{padding:9px 18px;border-radius:9px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:16px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,#6c63ff)}
+.kpi-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.kpi-val{font-size:28px;font-weight:800;color:#fff;font-family:'Playfair Display',serif}
+.kpi-sub{font-size:11px;color:rgba(255,255,255,.35);margin-top:3px}
+.cand-row{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.cand-top{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;cursor:pointer;flex-wrap:wrap;gap:8px}
+.cand-info{display:flex;align-items:center;gap:12px}
+.cand-av{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0;font-family:'Playfair Display',serif}
+.cand-nm{font-size:14px;font-weight:700;color:#fff}
+.cand-em{font-size:11px;color:rgba(255,255,255,.4);margin-top:1px}
+.cand-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pill{border-radius:16px;padding:5px 13px;font-size:11px;font-weight:700}
+.cand-dt{font-size:11px;color:rgba(255,255,255,.3)}
+.btn-print{padding:7px 16px;border-radius:7px;border:none;background:linear-gradient(135deg,#1a6b3a,#27ae60);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.chev{color:rgba(255,255,255,.3);font-size:16px;transition:transform .3s}
+.chev.op{transform:rotate(180deg)}
+.cand-body{display:none;padding:0 14px 16px}
+.cand-body.op{display:block}
+.empty-adm{text-align:center;padding:60px 20px;color:rgba(255,255,255,.3)}
+.loading-adm{text-align:center;padding:60px;color:rgba(255,255,255,.4);font-size:15px}
+
+/* ── PRINT AREA ── */
+#print-area{display:none}
+@media print{
+  body *{display:none!important}
+  #print-area{display:block!important;position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:99999;padding:0;margin:0;overflow:visible}
+  #print-area *{display:revert!important}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
+#print-area .p-page{width:210mm;margin:0 auto;font-family:Arial,sans-serif;font-size:13px;color:#1a1a2e;padding:0}
 </style>
 </head>
 <body>
 
+<!-- ══ PRINT AREA (invisível, só aparece na impressão) ══ -->
+<div id="print-area"></div>
+
 <div id="app"></div>
 
 <script>
-// ═══════════════════════════════════════════════
-// !! CONFIGURE AQUI !!
-// Cole a URL do seu Google Apps Script abaixo:
-// ══ COLE AQUI OS 2 VALORES DO SUPABASE ══
-const SUPABASE_URL = "https://zjwiwxldpkqsdorhfbqr.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpqd2l3eGxkcGtxc2RvcmhmYnFyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Njk1NzMsImV4cCI6MjA5MDQ0NTU3M30.EGv__7fYx2Zu2zExAPG9QCqbnNEpg9xNLAbQSmNja7g";
-// ═════════════════════════════════════════
-const ADMIN_PASS   = "disc2026";
-// ═══════════════════════════════════════════════
+const SB_URL = 'https://zjwiwxldpkqsdorhfbqr.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpqd2l3eGxkcGtxc2RvcmhmYnFyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Njk1NzMsImV4cCI6MjA5MDQ0NTU3M30.EGv__7fYx2Zu2zExAPG9QCqbnNEpg9xNLAbQSmNja7g';
+const ADMIN_PASS = 'disc2026';
 
-const DISC_QUESTIONS = [
-  {id:1,text:"Ao enfrentar um desafio no trabalho, você geralmente:",options:[{text:"Age rapidamente e foca nos resultados",type:"D"},{text:"Envolve outras pessoas e busca soluções criativas",type:"I"},{text:"Analisa com calma e mantém o processo estável",type:"S"},{text:"Pesquisa, coleta dados e segue procedimentos",type:"C"}]},
-  {id:2,text:"Em reuniões de equipe, você costuma:",options:[{text:"Fazer perguntas detalhadas e verificar informações",type:"C"},{text:"Assumir o controle e direcionar a discussão",type:"D"},{text:"Ouvir atentamente e apoiar o consenso do grupo",type:"S"},{text:"Animar o grupo e propor ideias novas",type:"I"}]},
-  {id:3,text:"Quando precisa tomar uma decisão importante, você:",options:[{text:"Pensa com calma e evita riscos desnecessários",type:"S"},{text:"Analisa todos os dados disponíveis antes de decidir",type:"C"},{text:"Decide com confiança, mesmo sem todas as informações",type:"D"},{text:"Consulta outras pessoas e se baseia em intuição",type:"I"}]},
-  {id:4,text:"Como você prefere receber feedback sobre seu trabalho?",options:[{text:"De forma positiva, valorizando meu esforço",type:"I"},{text:"Com exemplos concretos e orientações detalhadas",type:"C"},{text:"Direto ao ponto, focado em resultados",type:"D"},{text:"Com gentileza, preservando o relacionamento",type:"S"}]},
-  {id:5,text:"Qual palavra melhor descreve seu estilo de trabalho?",options:[{text:"Meticuloso",type:"C"},{text:"Colaborativo",type:"S"},{text:"Determinado",type:"D"},{text:"Inspirador",type:"I"}]},
-  {id:6,text:"Quando há conflito na equipe, você tende a:",options:[{text:"Confrontar diretamente e resolver logo",type:"D"},{text:"Analisar a situação e buscar a solução mais justa",type:"C"},{text:"Evitar confronto e buscar paz no grupo",type:"S"},{text:"Mediar com entusiasmo e buscar harmonia",type:"I"}]},
-  {id:7,text:"O que mais te motiva profissionalmente?",options:[{text:"Estabilidade e fazer parte de uma equipe unida",type:"S"},{text:"Superar metas e alcançar resultados",type:"D"},{text:"Qualidade do trabalho e domínio técnico",type:"C"},{text:"Reconhecimento e interação com pessoas",type:"I"}]},
-  {id:8,text:"Como você lida com prazos apertados?",options:[{text:"Organizo tudo detalhadamente para não errar",type:"C"},{text:"Foco total no resultado, sem tempo a perder",type:"D"},{text:"Trabalho metodicamente mantendo a qualidade",type:"S"},{text:"Busco ajuda da equipe e mantenho o ânimo",type:"I"}]},
-  {id:9,text:"Em projetos novos, seu papel natural é:",options:[{text:"Engajar a equipe e criar entusiasmo",type:"I"},{text:"Planejar detalhes e garantir a qualidade",type:"C"},{text:"Liderar e definir os objetivos",type:"D"},{text:"Apoiar a execução e manter a consistência",type:"S"}]},
-  {id:10,text:"Como você reage a mudanças inesperadas no trabalho?",options:[{text:"Preciso entender bem a mudança antes de aceitar",type:"C"},{text:"Fico animado com novas possibilidades",type:"I"},{text:"Adapto rapidamente e vejo como oportunidade",type:"D"},{text:"Me adapto, mas prefiro processos estáveis",type:"S"}]},
-  {id:11,text:"Quando trabalha em equipe, você prefere:",options:[{text:"Apoiar os colegas e garantir harmonia",type:"S"},{text:"Liderar as decisões e delegar tarefas",type:"D"},{text:"Cuidar da parte técnica e do controle de qualidade",type:"C"},{text:"Colaborar com energia e motivar o grupo",type:"I"}]},
-  {id:12,text:"Qual situação te deixa mais desconfortável?",options:[{text:"Trabalhos sem padrão ou cheios de erros",type:"C"},{text:"Conflitos frequentes e ambiente instável",type:"S"},{text:"Falta de autonomia ou controle sobre resultados",type:"D"},{text:"Isolamento e falta de interação com pessoas",type:"I"}]},
-  {id:13,text:"Como você descreve seu ritmo de trabalho?",options:[{text:"Dinâmico e variado, gosto de novidades",type:"I"},{text:"Acelerado e orientado a resultados",type:"D"},{text:"Cuidadoso e preciso, não abro mão da qualidade",type:"C"},{text:"Constante e previsível, prefiro rotinas",type:"S"}]},
-  {id:14,text:"Ao apresentar uma ideia nova para a equipe, você:",options:[{text:"Fundamenta com dados e argumentos sólidos",type:"C"},{text:"Apresenta de forma calma e busca consenso",type:"S"},{text:"Vai direto ao ponto e defende com firmeza",type:"D"},{text:"Usa criatividade e entusiasmo para convencer",type:"I"}]},
-  {id:15,text:"O que colegas costumam reconhecer em você?",options:[{text:"Que sou confiante e focado em resultados",type:"D"},{text:"Que sou detalhista e comprometido com a qualidade",type:"C"},{text:"Que sou animado e fácil de trabalhar junto",type:"I"},{text:"Que sou confiável e sempre apoio o time",type:"S"}]},
-  {id:16,text:"Como você reage quando erra em alguma tarefa?",options:[{text:"Aprendo com o erro e busco apoio dos colegas",type:"I"},{text:"Analiso profundamente o que deu errado para não repetir",type:"C"},{text:"Corrijo rapidamente e sigo em frente",type:"D"},{text:"Fico desconfortável, mas resolvo com calma",type:"S"}]},
-  {id:17,text:"Em situações de pressão, você tende a:",options:[{text:"Manter a calma e trabalhar de forma constante",type:"S"},{text:"Revisar detalhes e garantir que tudo esteja correto",type:"C"},{text:"Buscar motivação nas pessoas ao redor",type:"I"},{text:"Assumir o controle e agir com mais energia",type:"D"}]},
-  {id:18,text:"O que você mais valoriza em um líder?",options:[{text:"Carisma, abertura e capacidade de inspirar",type:"I"},{text:"Empatia, consistência e cuidado com a equipe",type:"S"},{text:"Conhecimento técnico, organização e rigor",type:"C"},{text:"Decisão, objetividade e foco em resultados",type:"D"}]},
-  {id:19,text:"Como você prefere se comunicar no trabalho?",options:[{text:"De forma estruturada, com dados e detalhes",type:"C"},{text:"De forma objetiva, direta e rápida",type:"D"},{text:"De forma gentil, paciente e clara",type:"S"},{text:"De forma expressiva, aberta e interativa",type:"I"}]},
-  {id:20,text:"Qual é sua maior força como profissional?",options:[{text:"Consistência, lealdade e trabalho em equipe",type:"S"},{text:"Habilidade de influenciar e engajar pessoas",type:"I"},{text:"Capacidade de fazer acontecer e superar obstáculos",type:"D"},{text:"Precisão, qualidade e atenção aos detalhes",type:"C"}]}
+const QS = [
+  {id:1,t:"Ao enfrentar um desafio no trabalho, você geralmente:",o:[{t:"Age rapidamente e foca nos resultados",d:"D"},{t:"Envolve outras pessoas e busca soluções criativas",d:"I"},{t:"Analisa com calma e mantém o processo estável",d:"S"},{t:"Pesquisa, coleta dados e segue procedimentos",d:"C"}]},
+  {id:2,t:"Em reuniões de equipe, você costuma:",o:[{t:"Assumir o controle e direcionar a discussão",d:"D"},{t:"Animar o grupo e propor ideias novas",d:"I"},{t:"Ouvir atentamente e apoiar o consenso do grupo",d:"S"},{t:"Fazer perguntas detalhadas e verificar informações",d:"C"}]},
+  {id:3,t:"Quando precisa tomar uma decisão importante, você:",o:[{t:"Decide com confiança, mesmo sem todas as informações",d:"D"},{t:"Consulta outras pessoas e se baseia em intuição",d:"I"},{t:"Pensa com calma e evita riscos desnecessários",d:"S"},{t:"Analisa todos os dados disponíveis antes de decidir",d:"C"}]},
+  {id:4,t:"Como você prefere receber feedback sobre seu trabalho?",o:[{t:"Direto ao ponto, focado em resultados",d:"D"},{t:"De forma positiva, valorizando meu esforço",d:"I"},{t:"Com gentileza, preservando o relacionamento",d:"S"},{t:"Com exemplos concretos e orientações detalhadas",d:"C"}]},
+  {id:5,t:"Qual palavra melhor descreve seu estilo de trabalho?",o:[{t:"Determinado",d:"D"},{t:"Inspirador",d:"I"},{t:"Colaborativo",d:"S"},{t:"Meticuloso",d:"C"}]},
+  {id:6,t:"Quando há conflito na equipe, você tende a:",o:[{t:"Confrontar diretamente e resolver logo",d:"D"},{t:"Mediar com entusiasmo e buscar harmonia",d:"I"},{t:"Evitar confronto e buscar paz no grupo",d:"S"},{t:"Analisar a situação e buscar a solução mais justa",d:"C"}]},
+  {id:7,t:"O que mais te motiva profissionalmente?",o:[{t:"Superar metas e alcançar resultados",d:"D"},{t:"Reconhecimento e interação com pessoas",d:"I"},{t:"Estabilidade e fazer parte de uma equipe unida",d:"S"},{t:"Qualidade do trabalho e domínio técnico",d:"C"}]},
+  {id:8,t:"Como você lida com prazos apertados?",o:[{t:"Foco total no resultado, sem tempo a perder",d:"D"},{t:"Busco ajuda da equipe e mantenho o ânimo",d:"I"},{t:"Trabalho metodicamente mantendo a qualidade",d:"S"},{t:"Organizo tudo detalhadamente para não errar",d:"C"}]},
+  {id:9,t:"Em projetos novos, seu papel natural é:",o:[{t:"Liderar e definir os objetivos",d:"D"},{t:"Engajar a equipe e criar entusiasmo",d:"I"},{t:"Apoiar a execução e manter a consistência",d:"S"},{t:"Planejar detalhes e garantir a qualidade",d:"C"}]},
+  {id:10,t:"Como você reage a mudanças inesperadas no trabalho?",o:[{t:"Adapto rapidamente e vejo como oportunidade",d:"D"},{t:"Fico animado com novas possibilidades",d:"I"},{t:"Me adapto, mas prefiro processos estáveis",d:"S"},{t:"Preciso entender bem a mudança antes de aceitar",d:"C"}]},
+  {id:11,t:"Quando trabalha em equipe, você prefere:",o:[{t:"Liderar as decisões e delegar tarefas",d:"D"},{t:"Colaborar com energia e motivar o grupo",d:"I"},{t:"Apoiar os colegas e garantir harmonia",d:"S"},{t:"Cuidar da parte técnica e do controle de qualidade",d:"C"}]},
+  {id:12,t:"Qual situação te deixa mais desconfortável?",o:[{t:"Falta de autonomia ou controle sobre resultados",d:"D"},{t:"Isolamento e falta de interação com pessoas",d:"I"},{t:"Conflitos frequentes e ambiente instável",d:"S"},{t:"Trabalhos sem padrão ou cheios de erros",d:"C"}]},
+  {id:13,t:"Como você descreve seu ritmo de trabalho?",o:[{t:"Acelerado e orientado a resultados",d:"D"},{t:"Dinâmico e variado, gosto de novidades",d:"I"},{t:"Constante e previsível, prefiro rotinas",d:"S"},{t:"Cuidadoso e preciso, não abro mão da qualidade",d:"C"}]},
+  {id:14,t:"Ao apresentar uma ideia nova para a equipe, você:",o:[{t:"Vai direto ao ponto e defende com firmeza",d:"D"},{t:"Usa criatividade e entusiasmo para convencer",d:"I"},{t:"Apresenta de forma calma e busca consenso",d:"S"},{t:"Fundamenta com dados e argumentos sólidos",d:"C"}]},
+  {id:15,t:"O que colegas costumam reconhecer em você?",o:[{t:"Que sou confiante e focado em resultados",d:"D"},{t:"Que sou animado e fácil de trabalhar junto",d:"I"},{t:"Que sou confiável e sempre apoio o time",d:"S"},{t:"Que sou detalhista e comprometido com a qualidade",d:"C"}]},
+  {id:16,t:"Como você reage quando erra em alguma tarefa?",o:[{t:"Corrijo rapidamente e sigo em frente",d:"D"},{t:"Aprendo com o erro e busco apoio dos colegas",d:"I"},{t:"Fico desconfortável, mas resolvo com calma",d:"S"},{t:"Analiso profundamente o que deu errado para não repetir",d:"C"}]},
+  {id:17,t:"Em situações de pressão, você tende a:",o:[{t:"Assumir o controle e agir com mais energia",d:"D"},{t:"Buscar motivação nas pessoas ao redor",d:"I"},{t:"Manter a calma e trabalhar de forma constante",d:"S"},{t:"Revisar detalhes e garantir que tudo esteja correto",d:"C"}]},
+  {id:18,t:"O que você mais valoriza em um líder?",o:[{t:"Decisão, objetividade e foco em resultados",d:"D"},{t:"Carisma, abertura e capacidade de inspirar",d:"I"},{t:"Empatia, consistência e cuidado com a equipe",d:"S"},{t:"Conhecimento técnico, organização e rigor",d:"C"}]},
+  {id:19,t:"Como você prefere se comunicar no trabalho?",o:[{t:"De forma objetiva, direta e rápida",d:"D"},{t:"De forma expressiva, aberta e interativa",d:"I"},{t:"De forma gentil, paciente e clara",d:"S"},{t:"De forma estruturada, com dados e detalhes",d:"C"}]},
+  {id:20,t:"Qual é sua maior força como profissional?",o:[{t:"Capacidade de fazer acontecer e superar obstáculos",d:"D"},{t:"Habilidade de influenciar e engajar pessoas",d:"I"},{t:"Consistência, lealdade e trabalho em equipe",d:"S"},{t:"Precisão, qualidade e atenção aos detalhes",d:"C"}]}
 ];
 
-const PROFILES = {
-  D:{name:"Dominância",color:"#C0392B",bg:"#FDF2F0",border:"#E74C3C",icon:"⚡",
-    desc:"Você é direto, decisivo e orientado a resultados. Assume riscos calculados e prefere agir a esperar. Tem forte senso de urgência e gosta de autonomia para tomar decisões.",
-    strengths:["Liderança natural e assertividade","Foco intenso em resultados","Tomada de decisão ágil","Alta produtividade sob pressão"],
-    challenges:["Pode ser impaciente com processos lentos","Tende a subestimar o lado humano","Pode parecer autoritário para a equipe"],
-    analyst:"Como analista com perfil D, você entrega análises com agilidade e não hesita em defender seus insights para a liderança. Desenvolver escuta ativa e paciência com processos colaborativos irá ampliar ainda mais seu impacto."},
-  I:{name:"Influência",color:"#D35400",bg:"#FEF9F0",border:"#F39C12",icon:"✨",
-    desc:"Você é comunicativo, entusiasmado e persuasivo. Tem facilidade em criar conexões, engajar pessoas e manter o ambiente energizado. Prefere ambientes dinâmicos e colaborativos.",
-    strengths:["Comunicação eficaz e carismática","Capacidade de motivar equipes","Criatividade e pensamento lateral","Facilidade em networking"],
-    challenges:["Pode ser desorganizado com detalhes","Tende a evitar situações difíceis","Pode comprometer mais do que consegue entregar"],
-    analyst:"Como analista com perfil I, você tem grande facilidade em apresentar resultados e engajar stakeholders. Investir em organização das entregas e atenção a detalhes técnicos elevará a consistência das suas análises."},
-  S:{name:"Estabilidade",color:"#1E8449",bg:"#F0FBF4",border:"#27AE60",icon:"🌿",
-    desc:"Você é paciente, confiável e colaborativo. Valoriza harmonia, consistência e estabilidade. É o pilar da equipe — sempre presente, comprometido e de confiança.",
-    strengths:["Confiabilidade e comprometimento","Trabalho em equipe e empatia","Escuta ativa e sensibilidade","Consistência nas entregas"],
-    challenges:["Pode resistir a mudanças necessárias","Evita conflitos em excesso","Dificuldade em impor limites e prioridades"],
-    analyst:"Como analista com perfil S, você é altamente confiável e mantém consistência nas entregas. Desenvolver mais proatividade para propor mudanças e defender suas análises com firmeza irá acelerar seu crescimento."},
-  C:{name:"Conformidade",color:"#1A5276",bg:"#EBF5FB",border:"#2980B9",icon:"🎯",
-    desc:"Você é analítico, preciso e meticuloso. Prima pela qualidade e segue processos com rigor. Tem alto padrão de excelência e necessidade de entender as razões por trás das decisões.",
-    strengths:["Atenção excepcional aos detalhes","Alta qualidade e rigor técnico","Pensamento crítico e analítico","Organização e planejamento"],
-    challenges:["Pode ser perfeccionista em excesso","Dificuldade em decidir com dados incompletos","Pode ser excessivamente crítico"],
-    analyst:"Como analista com perfil C, você tem excelência natural em análise crítica e controle de qualidade. Desenvolver mais agilidade nas entregas e flexibilidade quando os dados não são perfeitos irá potencializar seus resultados."}
+const PROF = {
+  D:{name:'Dominância',color:'#C0392B',bg:'#FDF2F0',border:'#E74C3C',icon:'⚡',
+    desc:'Você é direto, decisivo e orientado a resultados. Assume riscos calculados e prefere agir a esperar. Forte senso de urgência e necessidade de autonomia para tomar decisões.',
+    fortes:['Liderança natural e assertividade','Foco intenso em resultados','Tomada de decisão ágil','Alta produtividade sob pressão'],
+    atencao:['Pode ser impaciente com processos lentos','Tende a subestimar o lado humano','Pode parecer autoritário para a equipe'],
+    candidato:'Como analista com perfil D, você entrega análises com agilidade e não hesita em defender seus insights para a liderança. Desenvolver escuta ativa e paciência com processos colaborativos irá ampliar ainda mais seu impacto.',
+    recrutador:'Indicada para funções com metas claras e autonomia de execução. Potencial elevado para liderança de projetos e tomada de decisão rápida. Acompanhar integração com equipe e estimular habilidades interpessoais e escuta ativa.'},
+  I:{name:'Influência',color:'#D35400',bg:'#FEF9F0',border:'#F39C12',icon:'✨',
+    desc:'Você é comunicativa, entusiasmada e persuasiva. Facilidade em criar conexões, engajar pessoas e manter o ambiente energizado. Prefere ambientes dinâmicos e colaborativos.',
+    fortes:['Comunicação eficaz e carismática','Capacidade de motivar equipes','Criatividade e pensamento lateral','Facilidade em networking'],
+    atencao:['Pode ser desorganizada com detalhes','Tende a evitar situações difíceis','Pode comprometer mais do que consegue entregar'],
+    candidato:'Como analista com perfil I, você tem grande facilidade em apresentar resultados e engajar stakeholders. Investir em organização das entregas e atenção a detalhes técnicos elevará a consistência das suas análises.',
+    recrutador:'Indicada para funções de comunicação, apresentação de resultados e trabalho colaborativo. Estruturar entregas com checklist de prazos. Alto potencial para onboarding e treinamento de equipes.'},
+  S:{name:'Estabilidade',color:'#1E8449',bg:'#F0FBF4',border:'#27AE60',icon:'🌿',
+    desc:'Você é paciente, confiável e colaborativa. Valoriza harmonia, consistência e estabilidade. É o pilar da equipe — sempre presente, comprometida e de confiança.',
+    fortes:['Confiabilidade e comprometimento','Trabalho em equipe e empatia','Escuta ativa e sensibilidade','Consistência nas entregas'],
+    atencao:['Pode resistir a mudanças mesmo quando necessárias','Evita conflitos até prejudicar resultados','Dificuldade em impor limites e prioridades'],
+    candidato:'Como analista com perfil S, você é altamente confiável e mantém consistência nas entregas. Desenvolver mais proatividade para propor mudanças e defender suas análises com firmeza irá acelerar seu crescimento.',
+    recrutador:'Indicada para equipes que valorizam consistência e colaboração. Excelente para análise de rotina e suporte a processos. Encorajar posicionamento mais ativo em reuniões e discussões estratégicas.'},
+  C:{name:'Conformidade',color:'#1A5276',bg:'#EBF5FB',border:'#2980B9',icon:'🎯',
+    desc:'Você é analítica, precisa e meticulosa. Prima pela qualidade e segue processos com rigor. Alto padrão de excelência e necessidade de entender as razões por trás das decisões.',
+    fortes:['Atenção excepcional aos detalhes','Alta qualidade e rigor técnico','Pensamento crítico e analítico','Organização e planejamento'],
+    atencao:['Pode ser perfeccionista em excesso','Dificuldade em decidir com dados incompletos','Pode ser excessivamente crítica'],
+    candidato:'Como analista com perfil C, você tem excelência natural em análise crítica e controle de qualidade. Desenvolver mais agilidade nas entregas e flexibilidade quando os dados não são perfeitos irá potencializar seus resultados.',
+    recrutador:'Ideal para análise técnica, auditoria e controle de qualidade. Definir prazos claros e estimular decisão com dados parciais. Excelente para funções que exigem rigor e precisão.'}
 };
-
-const DISC_COLORS = {D:"#C0392B",I:"#D35400",S:"#1E8449",C:"#1A5276"};
 
 // ── STATE ──
-let state = {
-  view:"form",       // form | done | adminLogin | admin
-  step:"info",       // info | questions
-  name:"", email:"",
-  answers:{},
-  result:null,
-  adminPass:"",
-  adminError:"",
-  allResults:[],
-  loading:false,
-  submitLoading:false,
-  infoError:"",
-  adminFilter:"all",
-  adminSearch:""
+let ST = {
+  view:'form', step:'info',
+  nome:'', email:'', respostas:{},
+  loading:false, erro:'',
+  adminPass:'', adminErro:'',
+  resultados:[], resultadoAtual:null
 };
 
-function setState(patch){
-  Object.assign(state, patch);
-  if(patch.allResults) window._discResults={},(patch.allResults||[]).forEach(function(r){window._discResults[r.id]=r;});
-  render();
-}
+function set(p){Object.assign(ST,p);draw();}
 
-// ── UTILS ──
-function score(answers){
+// ── SCORE ──
+function calcScore(res){
   const c={D:0,I:0,S:0,C:0};
-  Object.values(answers).forEach(t=>c[t]++);
-  const total=Object.values(c).reduce((a,b)=>a+b,0);
-  const pct={};
-  ["D","I","S","C"].forEach(k=>pct[k]=total?Math.round(c[k]/total*100):0);
-  const dominant=Object.entries(c).sort((a,b)=>b[1]-a[1])[0][0];
-  return{counts:c,pct,dominant};
+  Object.values(res||{}).forEach(d=>{if(c[d]!==undefined)c[d]++;});
+  const tot=Object.values(c).reduce((a,b)=>a+b,0);
+  const pct={};['D','I','S','C'].forEach(k=>pct[k]=tot?Math.round(c[k]/tot*100):0);
+  const dom=Object.entries(c).sort((a,b)=>b[1]-a[1])[0][0];
+  return{counts:c,pct,dom};
 }
 
-function radarSVG(pct){
-  const cx=100,cy=100,r=68;
-  const labels=["D","I","S","C"];
-  const angles=[-90,0,90,180];
-  const pts=labels.map((l,i)=>{
-    const a=angles[i]*Math.PI/180;
-    const v=pct[l]/100*r;
-    return{x:cx+v*Math.cos(a),y:cy+v*Math.sin(a)};
-  });
-  const axes=labels.map((l,i)=>{
-    const a=angles[i]*Math.PI/180;
-    return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a),l,c:DISC_COLORS[l]};
-  });
-  let svg=`<svg viewBox="0 0 200 200" style="width:100%;max-width:200px">`;
-  [.25,.5,.75,1].forEach(f=>{
-    const ps=labels.map((_,i)=>{const a=angles[i]*Math.PI/180;return`${cx+r*f*Math.cos(a)},${cy+r*f*Math.sin(a)}`;}).join(" ");
-    svg+=`<polygon points="${ps}" fill="none" stroke="#e0e0e0" stroke-width="0.5"/>`;
-  });
-  axes.forEach(a=>svg+=`<line x1="${cx}" y1="${cy}" x2="${a.x}" y2="${a.y}" stroke="#ddd" stroke-width="0.5"/>`);
-  const poly=pts.map(p=>`${p.x},${p.y}`).join(" ");
-  svg+=`<polygon points="${poly}" fill="rgba(41,128,185,.15)" stroke="#2980B9" stroke-width="2"/>`;
-  axes.forEach((a,i)=>{svg+=`<circle cx="${pts[i].x}" cy="${pts[i].y}" r="3" fill="${a.c}"/>`;});
-  axes.forEach(a=>svg+=`<text x="${a.x}" y="${a.y}" text-anchor="middle" dominant-baseline="middle" style="font-size:13px;font-weight:700;fill:${a.c};font-family:'Playfair Display',serif">${a.l}</text>`);
-  svg+=`</svg>`;
-  return svg;
+// ── RADAR SVG ──
+function radarSVG(pct,size){
+  size=size||180;
+  const cx=size/2,cy=size/2,r=size*0.36;
+  const lb=['D','I','S','C'],ag=[-90,0,90,180];
+  const CO={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
+  function pt(k,f){f=f===undefined?1:f;const i=lb.indexOf(k),a=ag[i]*Math.PI/180,v=pct[k]/100*r*f;return[cx+v*Math.cos(a),cy+v*Math.sin(a)];}
+  function ax(i,f){f=f===undefined?1:f;const a=ag[i]*Math.PI/180;return[cx+r*f*Math.cos(a),cy+r*f*Math.sin(a)];}
+  let s=`<svg viewBox="0 0 ${size} ${size}" style="width:100%;max-width:${size}px">`;
+  [.25,.5,.75,1].forEach(f=>{const ps=lb.map((_,i)=>ax(i,f).join(',')).join(' ');s+=`<polygon points="${ps}" fill="none" stroke="#ddd" stroke-width="0.5"/>`;});
+  for(let i=0;i<4;i++){const a=ax(i);s+=`<line x1="${cx}" y1="${cy}" x2="${a[0]}" y2="${a[1]}" stroke="#ddd" stroke-width="0.4"/>`;}
+  const dpts=lb.map(k=>pt(k).join(',')).join(' ');
+  s+=`<polygon points="${dpts}" fill="rgba(108,99,255,.15)" stroke="#6c63ff" stroke-width="1.5"/>`;
+  lb.forEach(k=>{const p=pt(k);s+=`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="${CO[k]}"/>`;});
+  lb.forEach((k,i)=>{const a=ax(i,1.22);s+=`<text x="${a[0]}" y="${+a[1]+4}" text-anchor="middle" font-size="12" font-weight="700" fill="${CO[k]}" font-family="Arial">${k}</text>`;});
+  return s+'</svg>';
 }
 
-function resultCardHTML(r, compact=false){
-  const {pct,dominant,counts}=score(r.answers);
-  const p=PROFILES[dominant];
-  const dateStr=r.submittedAt?new Date(r.submittedAt).toLocaleString("pt-BR"):"";
-  return`<div class="result-card" style="border-color:${p.border};${compact?"margin-bottom:20px":""}">
-    <div class="result-header" style="background:${p.bg};border-color:${p.border}">
+// ── RESULT CARD HTML ──
+function resultCardHTML(r){
+  const {counts,pct,dom}=calcScore(r.respostas);
+  const p=PROF[dom];
+  const dt=r.criado_em?new Date(r.criado_em).toLocaleString('pt-BR'):'';
+  return `
+  <div class="res-card" style="border-color:${p.border}">
+    <div class="res-hdr" style="background:${p.bg};border-color:${p.border}">
       <div>
-        <div style="font-size:20px;font-weight:800;color:#1a1a2e;font-family:'Playfair Display',serif">${p.icon} ${r.name}</div>
-        <div style="font-size:13px;color:#666;margin-top:2px">${r.email}</div>
-        ${dateStr?`<div style="font-size:12px;color:#999;margin-top:2px">${dateStr}</div>`:""}
+        <div style="font-size:18px;font-weight:800;color:#1a1a2e;font-family:'Playfair Display',serif">${p.icon} ${r.nome}</div>
+        <div style="font-size:12px;color:#666;margin-top:2px">${r.email}</div>
+        ${dt?`<div style="font-size:11px;color:#999;margin-top:1px">${dt}</div>`:''}
       </div>
-      <div class="result-badge" style="background:${p.color}">Perfil ${dominant} · ${p.name}</div>
+      <div class="res-badge" style="background:${p.color}">Perfil ${dom} · ${p.name}</div>
     </div>
-    <div class="result-body">
-      <div class="radar-wrap">
-        ${radarSVG(pct)}
-        <div class="legend">
-          ${["D","I","S","C"].map(k=>`<div class="leg-item"><div class="leg-dot" style="background:${DISC_COLORS[k]}"></div>${k}: <strong>${pct[k]}%</strong></div>`).join("")}
+    <div class="res-body">
+      <div class="radar-side">
+        ${radarSVG(pct,170)}
+        <div class="leg">
+          ${['D','I','S','C'].map(k=>`<div class="leg-i"><div class="leg-dot" style="background:${PROF[k].color}"></div>${k}: <b>${pct[k]}%</b></div>`).join('')}
         </div>
       </div>
-      <div class="info-cols">
-        <div class="italic-block" style="border-color:${p.border}">${p.desc}</div>
-        <div class="two-col">
-          <div class="mini-card" style="background:#F8FFF8;border-color:#c8e6c9">
-            <div class="mini-title" style="color:#2e7d32">✅ Pontos Fortes</div>
-            ${p.strengths.map(s=>`<div class="mini-item">• ${s}</div>`).join("")}
+      <div class="info-side">
+        <div class="italic-b" style="border-color:${p.color}">${p.desc}</div>
+        <div class="two-c">
+          <div class="mini-b" style="background:#f8fff8;border-color:#c8e6c9">
+            <div class="mini-t" style="color:#1e6b3a">✅ Pontos Fortes</div>
+            ${p.fortes.map(f=>`<div class="mini-i">• ${f}</div>`).join('')}
           </div>
-          <div class="mini-card" style="background:#FFF8F8;border-color:#ffcdd2">
-            <div class="mini-title" style="color:#c62828">⚠️ Pontos de Atenção</div>
-            ${p.challenges.map(c=>`<div class="mini-item">• ${c}</div>`).join("")}
+          <div class="mini-b" style="background:#fff8f8;border-color:#ffcdd2">
+            <div class="mini-t" style="color:#c62828">⚠️ Pontos de Atenção</div>
+            ${p.atencao.map(a=>`<div class="mini-i">• ${a}</div>`).join('')}
           </div>
         </div>
-        <div class="analyst-box" style="background:#EEF4FF;border-color:#c5d8f7">
-          <div class="analyst-title" style="color:#1a237e">🧑‍💼 Avaliação para Analista</div>
-          <div class="analyst-text">${p.analyst}</div>
+        <div class="anal-b" style="background:#eef4ff;border-color:#c5d8f7">
+          <div class="mini-t" style="color:#1a237e">🧑‍💼 Orientação ao Candidato</div>
+          <div style="font-size:12px;color:#1a237e;line-height:1.6">${p.candidato}</div>
+        </div>
+        <div class="rec-b" style="background:#f0fbf4;border-color:#c8e6c9">
+          <div class="mini-t" style="color:#1a3d24">📋 Recomendação ao Recrutador</div>
+          <div style="font-size:12px;color:#1a3d24;line-height:1.6">${p.recrutador}</div>
         </div>
       </div>
     </div>
-    <div class="bars">
-      ${["D","I","S","C"].map(k=>`
-        <div class="bar-row">
-          <div class="bar-label">
-            <span style="font-weight:700;color:${DISC_COLORS[k]}">${k} — ${PROFILES[k].name}</span>
-            <span style="color:#666">${counts[k]} respostas · ${pct[k]}%</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill" style="width:${pct[k]}%;background:${DISC_COLORS[k]}"></div></div>
-        </div>`).join("")}
+    <div class="bars-sec">
+      ${['D','I','S','C'].map(k=>`
+      <div class="bar-r">
+        <div class="bar-lbl">
+          <span style="font-weight:700;color:${PROF[k].color}">${k} — ${PROF[k].name}</span>
+          <span style="color:#999">${counts[k]} respostas · ${pct[k]}%</span>
+        </div>
+        <div class="bar-tr"><div class="bar-fill" style="width:${pct[k]}%;background:${PROF[k].color}"></div></div>
+      </div>`).join('')}
     </div>
   </div>`;
 }
 
+// ── PRINT REPORT ──
+function printReport(r){
+  const {counts,pct,dom}=calcScore(r.respostas);
+  const p=PROF[dom];
+  const dt=r.criado_em?new Date(r.criado_em).toLocaleString('pt-BR'):'';
+  const KC={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
+  const KB={D:'#FDF2F0',I:'#FEF9F0',S:'#F0FBF4',C:'#EBF5FB'};
 
-// ── API SUPABASE ──
-async function saveResult(data){
-  try{
-    await fetch(SUPABASE_URL+"/rest/v1/disc_respostas",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "apikey":SUPABASE_KEY,
-        "Authorization":"Bearer "+SUPABASE_KEY,
-        "Prefer":"return=minimal"
-      },
-      body:JSON.stringify({
-        nome:data.name, email:data.email,
-        respostas:data.answers, enviado_em:data.submittedAt
-      })
-    });
-  }catch(e){}
+  const scoreCards=['D','I','S','C'].map(k=>`
+    <div style="border-radius:8px;padding:12px;text-align:center;background:${KB[k]};border:2px solid ${k===dom?KC[k]:'#eee'}">
+      <div style="font-size:18px;font-weight:900;color:${KC[k]};font-family:Arial">${k}</div>
+      <div style="font-size:9px;color:${KC[k]};margin-top:1px">${PROF[k].name}</div>
+      <div style="font-size:22px;font-weight:800;color:${KC[k]};margin:4px 0">${pct[k]}%</div>
+      <div style="font-size:9px;color:#999">${counts[k]} respostas</div>
+    </div>`).join('');
+
+  const barras=['D','I','S','C'].map(k=>`
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+      <div style="width:9px;height:9px;border-radius:2px;background:${KC[k]};flex-shrink:0"></div>
+      <span style="color:${KC[k]};font-weight:700;width:14px;font-size:10px">${k}</span>
+      <div style="flex:1;height:6px;background:#f0f0f0;border-radius:3px;overflow:hidden">
+        <div style="width:${pct[k]}%;height:100%;background:${KC[k]};border-radius:3px"></div>
+      </div>
+      <span style="width:26px;text-align:right;color:${KC[k]};font-size:10px;font-weight:700">${pct[k]}%</span>
+    </div>`).join('');
+
+  // Build SVG radar for print (pure SVG, no JS)
+  const sz=150,cx=75,cy=75,rv=75*0.37;
+  const lb=['D','I','S','C'],ag=[-90,0,90,180];
+  const CO={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
+  function ptf(k,f){f=f===undefined?1:f;const i=lb.indexOf(k),a=ag[i]*Math.PI/180,v=pct[k]/100*rv*f;return[cx+v*Math.cos(a),cy+v*Math.sin(a)];}
+  function axf(i,f){f=f===undefined?1:f;const a=ag[i]*Math.PI/180;return[cx+rv*f*Math.cos(a),cy+rv*f*Math.sin(a)];}
+  let svgR=`<svg viewBox="0 0 150 150" width="150" height="150" xmlns="http://www.w3.org/2000/svg">`;
+  [.25,.5,.75,1].forEach(f=>{const ps=lb.map((_,i)=>axf(i,f).join(',')).join(' ');svgR+=`<polygon points="${ps}" fill="none" stroke="#ddd" stroke-width="0.5"/>`;});
+  for(let i=0;i<4;i++){const a=axf(i);svgR+=`<line x1="${cx}" y1="${cy}" x2="${a[0]}" y2="${a[1]}" stroke="#ddd" stroke-width="0.4"/>`;}
+  svgR+=`<polygon points="${lb.map(k=>ptf(k).join(',')).join(' ')}" fill="rgba(108,99,255,.15)" stroke="#6c63ff" stroke-width="1.5"/>`;
+  lb.forEach(k=>{const pp=ptf(k);svgR+=`<circle cx="${pp[0]}" cy="${pp[1]}" r="3" fill="${CO[k]}"/>`;});
+  lb.forEach((k,i)=>{const a=axf(i,1.22);svgR+=`<text x="${a[0]}" y="${+a[1]+4}" text-anchor="middle" font-size="11" font-weight="bold" fill="${CO[k]}" font-family="Arial">${k}</text>`;});
+  svgR+='</svg>';
+
+  document.getElementById('print-area').innerHTML=`
+  <div class="p-page">
+    <div style="background:linear-gradient(135deg,#0f0c29,#0f3460);padding:22px 28px;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:20px;font-weight:800;color:#fff">Avaliação DISC</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">Relatório Individual de Perfil Comportamental</div>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">${dt}</div>
+    </div>
+    <div style="padding:12px 28px;display:flex;justify-content:space-between;align-items:center;background:${p.bg};border-bottom:3px solid ${p.color}">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:42px;height:42px;border-radius:9px;background:${p.color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0;font-family:Arial">${dom}</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:#1a1a2e">${r.nome}</div>
+          <div style="font-size:11px;color:#777;margin-top:1px">${r.email}</div>
+        </div>
+      </div>
+      <div style="background:${p.color};color:#fff;border-radius:18px;padding:6px 16px;font-size:12px;font-weight:800">Perfil ${dom} · ${p.name}</div>
+    </div>
+    <div style="padding:14px 28px">
+      <div style="font-size:10px;font-weight:800;color:#aaa;letter-spacing:2px;text-transform:uppercase;padding-bottom:7px;border-bottom:1px solid #eee;margin-bottom:12px">Resultado Geral</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">${scoreCards}</div>
+      <div style="display:grid;grid-template-columns:155px 1fr;gap:16px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+          ${svgR}
+          <div style="width:100%;margin-top:4px">${barras}</div>
+        </div>
+        <div>
+          <div style="background:${p.bg};border-left:4px solid ${p.color};padding:10px 12px;border-radius:0 6px 6px 0;font-style:italic;font-size:12px;line-height:1.65;color:#333;margin-bottom:10px">${p.desc}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px">
+            <div style="background:#f0fbf4;border:1px solid #c8e6c9;border-radius:6px;padding:9px">
+              <div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#1e6b3a;margin-bottom:5px">✅ Pontos Fortes</div>
+              ${p.fortes.map(f=>`<div style="font-size:11px;color:#1a3d24;margin-bottom:3px">• ${f}</div>`).join('')}
+            </div>
+            <div style="background:#fdf2f0;border:1px solid #ffcdd2;border-radius:6px;padding:9px">
+              <div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#c62828;margin-bottom:5px">⚠️ Pontos de Atenção</div>
+              ${p.atencao.map(a=>`<div style="font-size:11px;color:#5a1a14;margin-bottom:3px">• ${a}</div>`).join('')}
+            </div>
+          </div>
+          <div style="background:#eef4ff;border-left:4px solid #4a6cf7;border-radius:0 6px 6px 0;padding:9px 12px;margin-bottom:8px">
+            <div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a237e;margin-bottom:4px;text-transform:uppercase">🧑‍💼 Orientação ao Candidato</div>
+            <div style="font-size:12px;color:#1a237e;line-height:1.6">${p.candidato}</div>
+          </div>
+          <div style="background:#f0fbf4;border-left:4px solid #1e8449;border-radius:0 6px 6px 0;padding:9px 12px">
+            <div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a3d24;margin-bottom:4px;text-transform:uppercase">📋 Recomendação ao Recrutador</div>
+            <div style="font-size:12px;color:#1a3d24;line-height:1.6">${p.recrutador}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="background:#f8f9fc;border-top:1px solid #eee;padding:9px 28px;display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+      <div style="font-size:10px;color:#aaa">Avaliação DISC · ${r.nome} · ${dt}</div>
+      <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:3px 8px;font-size:10px;color:#856404;font-weight:700">🔒 Documento Confidencial</div>
+    </div>
+  </div>`;
+
+  window.print();
+
+  // Limpa após impressão
+  setTimeout(()=>{ document.getElementById('print-area').innerHTML=''; },2000);
 }
 
-async function loadResults(){
-  try{
-    const r=await fetch(
-      SUPABASE_URL+"/rest/v1/disc_respostas?order=enviado_em.desc",
-      {headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY}}
-    );
-    const rows=await r.json();
-    return (rows||[]).map(r=>({
-      id:r.id, name:r.nome, email:r.email,
-      answers:r.respostas, submittedAt:r.enviado_em
-    }));
-  }catch(e){return[];}
+// ── SUPABASE ──
+async function salvarResposta(dados){
+  const res=await fetch(`${SB_URL}/rest/v1/disc_respostas`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'return=representation'},
+    body:JSON.stringify(dados)
+  });
+  return res.json();
 }
 
+async function buscarResultados(){
+  const res=await fetch(`${SB_URL}/rest/v1/disc_respostas?order=criado_em.desc`,{
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+  });
+  return res.json();
+}
 
 // ── HANDLERS ──
-async function handleSubmit(){
-  if(Object.keys(state.answers).length<20)return;
-  setState({submitLoading:true});
-  const result={
-    name:state.name.trim(),
-    email:state.email.trim(),
-    answers:state.answers,
-    submittedAt:new Date().toISOString()
-  };
-  await saveResult(result);
-  setState({result,view:"done",submitLoading:false});
+async function submitForm(){
+  if(Object.keys(ST.respostas).length<20)return;
+  set({loading:true});
+  const dados={nome:ST.nome.trim(),email:ST.email.trim(),respostas:ST.respostas};
+  const result=await salvarResposta(dados);
+  set({loading:false,resultadoAtual:Array.isArray(result)?result[0]:result,view:'resultado'});
 }
 
-async function handleAdminLogin(){
-  if(state.adminPass===ADMIN_PASS){
-    setState({loading:true,view:"admin",adminError:""});
-    const allResults=await loadResults();
-    setState({allResults,loading:false});
+async function loginAdmin(){
+  if(ST.adminPass===ADMIN_PASS){
+    set({loading:true,adminErro:'',view:'admin'});
+    const res=await buscarResultados();
+    set({resultados:Array.isArray(res)?res:[],loading:false});
   } else {
-    setState({adminError:"Senha incorreta. Tente novamente."});
+    set({adminErro:'Senha incorreta.'});
   }
 }
 
-async function refreshAdmin(){
-  setState({loading:true});
-  const allResults=await loadResults();
-  setState({allResults,loading:false});
+async function atualizarAdmin(){
+  set({loading:true});
+  const res=await buscarResultados();
+  set({resultados:Array.isArray(res)?res:[],loading:false});
 }
 
-// ── RENDER FUNCTIONS ──
+function toggleCard(i){
+  const b=document.getElementById('cb'+i);
+  const c=document.getElementById('cv'+i);
+  if(b&&c){const op=b.classList.toggle('op');c.classList.toggle('op',op);}
+}
+
+// ── RENDER ──
 function renderInfo(){
   return`<div class="card">
-    <div class="header">
-      <div class="tag">AVALIAÇÃO COMPORTAMENTAL</div>
+    <div class="hdr">
+      <div style="display:inline-block;background:rgba(255,255,255,.1);border-radius:20px;padding:4px 16px;font-size:10px;letter-spacing:3px;margin-bottom:12px;color:rgba(255,255,255,.6)">AVALIAÇÃO COMPORTAMENTAL</div>
       <h1>Perfil DISC</h1>
-      <p>20 questões · Aproximadamente 5 minutos<br>Responda com honestidade — não há respostas certas ou erradas.</p>
+      <p>20 questões · Aproximadamente 5 minutos<br/>Responda com honestidade — não há respostas certas ou erradas.</p>
     </div>
     <div class="body">
-      <div class="disc-grid">
-        ${[{l:"D",lbl:"Dominância",c:"#C0392B"},{l:"I",lbl:"Influência",c:"#D35400"},{l:"S",lbl:"Estabilidade",c:"#1E8449"},{l:"C",lbl:"Conformidade",c:"#1A5276"}]
-          .map(p=>`<div class="disc-chip" style="background:${p.c}12;border:2px solid ${p.c}30">
-            <div class="letter" style="color:${p.c}">${p.l}</div>
-            <div class="lbl">${p.lbl}</div>
-          </div>`).join("")}
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+        ${[{k:'D',c:'#C0392B'},{k:'I',c:'#D35400'},{k:'S',c:'#1E8449'},{k:'C',c:'#1A5276'}].map(({k,c})=>`
+        <div style="text-align:center;padding:12px 6px;border-radius:12px;background:${c}15;border:2px solid ${c}30">
+          <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:${c}">${k}</div>
+          <div style="font-size:10px;color:#666;margin-top:2px">${PROF[k].name}</div>
+        </div>`).join('')}
       </div>
       <label>Nome completo *</label>
-      <input type="text" id="inp-name" placeholder="Digite seu nome completo" value="${state.name}" oninput="state.name=this.value"/>
+      <input type="text" id="inp-nome" placeholder="Digite seu nome" value="${ST.nome}" oninput="ST.nome=this.value"/>
       <label>E-mail *</label>
-      <input type="email" id="inp-email" placeholder="Digite seu e-mail" value="${state.email}" oninput="state.email=this.value" onkeydown="if(event.key==='Enter')startQuestions()"/>
-      ${state.infoError?`<div class="error-box">⚠️ ${state.infoError}</div>`:""}
-      <button class="btn btn-primary" onclick="startQuestions()">Iniciar Avaliação →</button>
-      <p class="note">Suas informações são confidenciais e usadas apenas para identificar seu resultado.</p>
+      <input type="email" id="inp-email" placeholder="Digite seu e-mail" value="${ST.email}" oninput="ST.email=this.value" onkeydown="if(event.key==='Enter')irParaPerguntas()"/>
+      ${ST.erro?`<div class="err">${ST.erro}</div>`:''}
+      <button class="btn btn-dark" onclick="irParaPerguntas()">Iniciar Avaliação →</button>
+      <p class="note">Suas informações são utilizadas apenas para identificar seu resultado.</p>
     </div>
   </div>
-  <button class="admin-link" onclick="setState({view:'adminLogin',adminError:''})">Acesso Admin</button>`;
+  <button class="admin-link" onclick="set({view:'adminLogin',adminErro:'',adminPass:''})">Acesso Admin</button>`;
 }
 
-function renderQuestions(){
-  const answered=Object.keys(state.answers).length;
-  const prog=Math.round(answered/20*100);
-  const allDone=answered===20;
+function irParaPerguntas(){
+  const n=document.getElementById('inp-nome')?.value||ST.nome;
+  const e=document.getElementById('inp-email')?.value||ST.email;
+  ST.nome=n;ST.email=e;
+  if(!n.trim()){set({erro:'Informe seu nome.'});return;}
+  if(!e.trim()||!e.includes('@')){set({erro:'Informe um e-mail válido.'});return;}
+  set({erro:'',step:'perguntas'});
+  window.scrollTo(0,0);
+}
+
+function renderPerguntas(){
+  const total=Object.keys(ST.respostas).length;
+  const prog=Math.round(total/20*100);
+  const allDone=total===20;
   return`<div class="card">
-    <div style="background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);color:#fff">
-      <div class="prog-header">
-        <div>
-          <h2>Avaliação DISC</h2>
-          <div style="font-size:12px;opacity:.6;margin-top:2px">${state.name}</div>
-        </div>
-        <div class="prog-count">${answered}<span>/20 respondidas</span></div>
+    <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff">
+      <div class="prog-top">
+        <h2>Avaliação DISC</h2>
+        <div class="prog-ct">${total}<span>/20</span></div>
       </div>
     </div>
     <div class="prog-bar"><div class="prog-fill" style="width:${prog}%"></div></div>
-    <div class="body">
-      ${DISC_QUESTIONS.map(q=>{
-        const ans=state.answers[q.id];
-        return`<div class="question${ans?" answered":""}">
-          <div class="q-num">QUESTÃO ${String(q.id).padStart(2,"0")}</div>
-          <div class="q-text">${q.text}</div>
-          ${q.options.map(o=>{
-            const sel=ans===o.type;
-            const p=PROFILES[o.type];
-            return`<button class="opt-btn${sel?" sel":""}"
-              style="${sel?`border-color:${p.color};background:${p.bg};color:${p.color}`:""}"
-              onclick="selectAnswer(${q.id},'${o.type}')">
-              <div class="radio" style="${sel?`border-color:${p.color};background:${p.color}`:""}">
-                ${sel?`<div class="radio-dot"></div>`:""}
+    <div class="q-wrap">
+      ${QS.map(q=>{
+        const ans=ST.respostas[q.id];
+        return`<div class="q-block ${ans?'ans':''}">
+          <div class="q-num">QUESTÃO ${String(q.id).padStart(2,'0')}</div>
+          <div class="q-text">${q.t}</div>
+          ${q.o.map(op=>{
+            const sel=ans===op.d;
+            const p=PROF[op.d];
+            return`<button class="opt ${sel?'sel':''}"
+              style="${sel?`border-color:${p.color};background:${p.bg};color:${p.color}`:''}"
+              onclick="ST.respostas={...ST.respostas,[${q.id}]:'${op.d}'};draw()">
+              <div class="radio" style="${sel?`border-color:${p.color};background:${p.color}`:''}">
+                ${sel?'<div class="radio-dot"></div>':''}
               </div>
-              ${o.text}
+              ${op.t}
             </button>`;
-          }).join("")}
+          }).join('')}
         </div>`;
-      }).join("")}
-      ${!allDone?`<div style="text-align:center;font-size:13px;color:#999;margin-bottom:14px">Responda todas as ${20-answered} questão(ões) restante(s) para concluir.</div>`:""}
-      <button class="btn ${allDone?"btn-green":"btn-primary"}" ${!allDone||state.submitLoading?"disabled":""} onclick="handleSubmit()">
-        ${state.submitLoading?"⏳ Salvando...":allDone?"✅ Ver Meu Resultado":"⏳ "+answered+"/20 respondidas"}
+      }).join('')}
+      ${!allDone?`<div style="text-align:center;font-size:13px;color:#999;margin-bottom:14px">Responda todas as ${20-total} questão(ões) restantes para concluir.</div>`:''}
+      <button class="btn ${allDone?'btn-green':'btn-dark'}" ${!allDone||ST.loading?'disabled':''} onclick="submitForm()">
+        ${ST.loading?'⏳ Salvando...':(allDone?'✅ Ver Meu Resultado':'⏳ '+total+'/20 respondidas')}
       </button>
     </div>
   </div>`;
 }
 
-function renderDone(){
+function renderResultado(){
+  const r=ST.resultadoAtual;
+  if(!r)return'';
   return`<div class="card" style="max-width:700px">
-    <div class="header">
-      <div style="font-size:36px;margin-bottom:8px">${PROFILES[score(state.result.answers).dominant].icon}</div>
+    <div class="hdr">
+      <div style="font-size:32px;margin-bottom:8px">${PROF[calcScore(r.respostas).dom].icon}</div>
       <h1>Seu Perfil DISC está pronto!</h1>
-      <p>Obrigado, ${state.result.name}! Veja sua avaliação abaixo.</p>
+      <p>Obrigado, ${r.nome}! Veja sua avaliação abaixo.</p>
     </div>
     <div class="body">
-      ${resultCardHTML(state.result)}
-      <div class="success-note" style="margin-top:16px">
-        ✅ Suas respostas foram registradas com sucesso.<br>O responsável pela avaliação já pode visualizar seu resultado.
+      ${resultCardHTML(r)}
+      <div style="background:#f8f9fa;border-radius:10px;padding:14px;font-size:13px;color:#666;text-align:center;margin-top:14px;line-height:1.6">
+        ✅ Suas respostas foram registradas. O recrutador já pode visualizar seu perfil.
       </div>
     </div>
   </div>
-  <button class="admin-link" onclick="setState({view:'adminLogin',adminError:''})">Acesso Admin</button>`;
+  <button class="admin-link" onclick="set({view:'adminLogin',adminErro:'',adminPass:''})">Acesso Admin</button>`;
 }
 
 function renderAdminLogin(){
-  return`<div class="card" style="max-width:420px">
-    <div class="header">
-      <div style="font-size:36px;margin-bottom:8px">🔐</div>
+  return`<div class="card" style="max-width:400px">
+    <div class="hdr">
+      <div style="font-size:32px;margin-bottom:8px">🔐</div>
       <h1>Painel Admin</h1>
-      <p>Avaliação DISC — Resultados das candidatas</p>
+      <p>Acesso restrito ao recrutador</p>
     </div>
     <div class="body">
-      <label>Senha de acesso</label>
-      <input type="password" placeholder="Digite a senha" value="${state.adminPass}"
-        oninput="state.adminPass=this.value"
-        onkeydown="if(event.key==='Enter')handleAdminLogin()"/>
-      ${state.adminError?`<div class="error-box">${state.adminError}</div>`:""}
-      <button class="btn btn-primary" onclick="handleAdminLogin()">Acessar Resultados</button>
-      <button class="btn btn-ghost" onclick="setState({view:'form',step:'info'})">← Voltar ao Formulário</button>
+      <label>Senha</label>
+      <input type="password" placeholder="Digite a senha" value="${ST.adminPass}"
+        oninput="ST.adminPass=this.value" onkeydown="if(event.key==='Enter')loginAdmin()"/>
+      ${ST.adminErro?`<div class="err">${ST.adminErro}</div>`:''}
+      <button class="btn btn-dark" onclick="loginAdmin()">Acessar →</button>
+      <button class="btn btn-ghost" onclick="set({view:'form',step:'info'})">← Voltar</button>
     </div>
   </div>`;
 }
 
 function renderAdmin(){
-  const all=state.allResults;
-  const count=all.length;
-  // Scores
-  const domCounts={D:0,I:0,S:0,C:0};
-  all.forEach(r=>{const s=score(r.answers);domCounts[s.dominant]++;});
-  const most=Object.entries(domCounts).sort((a,b)=>b[1]-a[1])[0];
-  // Filter
-  let filtered=all;
-  if(state.adminFilter&&state.adminFilter!=='all') filtered=all.filter(r=>score(r.answers).dominant===state.adminFilter);
-  if(state.adminSearch) filtered=filtered.filter(r=>(r.name+r.email).toLowerCase().includes(state.adminSearch.toLowerCase()));
-
+  const rs=ST.resultados;
+  const dom={D:0,I:0,S:0,C:0};
+  rs.forEach(r=>{const s=calcScore(r.respostas);dom[s.dom]++;});
   const kpis=[
-    {label:'Total Respostas',value:count,sub:'candidatas avaliadas',icon:'👥',c:'#6c63ff'},
-    {label:'Perfil Dominante',value:most?most[0]+' · '+PROFILES[most[0]].name:'—',sub:most?most[1]+' ocorrência(s)':'',icon:'🏆',c:most?PROFILES[most[0]].color:'#6c63ff'},
-    {label:'Dominância D',value:domCounts.D,sub:'candidatas',icon:'⚡',c:'#C0392B'},
-    {label:'Influência I',value:domCounts.I,sub:'candidatas',icon:'✨',c:'#D35400'},
-    {label:'Estabilidade S',value:domCounts.S,sub:'candidatas',icon:'🌿',c:'#1E8449'},
-    {label:'Conformidade C',value:domCounts.C,sub:'candidatas',icon:'🎯',c:'#1A5276'},
+    {l:'Total',v:rs.length,s:'candidatas',c:'#6c63ff'},
+    {l:'Dominância D',v:dom.D,s:'candidatas',c:'#C0392B'},
+    {l:'Influência I',v:dom.I,s:'candidatas',c:'#D35400'},
+    {l:'Estabilidade S',v:dom.S,s:'candidatas',c:'#1E8449'},
+    {l:'Conformidade C',v:dom.C,s:'candidatas',c:'#1A5276'},
   ];
-
-  const barChart=['D','I','S','C'].map(k=>{
-    const pct=count?Math.round(domCounts[k]/count*100):0;
-    return`<div class="bc-row">
-      <div class="bc-key" style="color:${DISC_COLORS[k]}">${k}</div>
-      <div class="bc-track">
-        <div class="bc-fill" style="width:${pct}%;background:${DISC_COLORS[k]}">${pct>12?PROFILES[k].name:''}</div>
+  return`<div class="adm-wrap">
+    <div class="adm-top">
+      <div>
+        <div class="adm-title">📊 Painel DISC</div>
+        <div class="adm-sub">${rs.length} resposta(s) recebida(s)</div>
       </div>
-      <div class="bc-pct">${pct}%</div>
-    </div>`;
-  }).join('');
-
-  const avgChart=count?['D','I','S','C'].map(k=>{
-    const avg=Math.round(all.reduce((s,r)=>{const sc=score(r.answers);return s+sc.pct[k];},0)/count);
-    return`<div class="bc-row">
-      <div class="bc-key" style="color:${DISC_COLORS[k]}">${k}</div>
-      <div class="bc-track">
-        <div class="bc-fill" style="width:${avg}%;background:${DISC_COLORS[k]}">${avg>12?'Média '+avg+'%':''}</div>
+      <div style="display:flex;gap:8px">
+        <button class="adm-btn" onclick="atualizarAdmin()">🔄 Atualizar</button>
+        <button class="adm-btn" onclick="set({view:'form',step:'info'})">← Sair</button>
       </div>
-      <div class="bc-pct">${avg}%</div>
-    </div>`;
-  }).join(''):'<div style="color:rgba(255,255,255,.3);font-size:13px">Nenhum dado ainda.</div>';
-
-  const cards=filtered.length===0
-    ?`<div class="adm-empty"><div style="font-size:48px;margin-bottom:12px">🔍</div><div>Nenhuma candidata encontrada</div></div>`
-    :filtered.map((r,i)=>{
-      const {dominant,pct,counts}=score(r.answers);
-      const p=PROFILES[dominant];
-      const rec={
-        D:'Indicada para funções com metas claras e autonomia. Potencial de liderança. Monitorar integração com equipe.',
-        I:'Indicada para comunicação e trabalho colaborativo. Estruturar prazos e entregas. Potencial em treinamentos.',
-        S:'Excelente para processos e suporte. Encorajar posicionamento mais ativo em reuniões estratégicas.',
-        C:'Ideal para análise técnica e controle de qualidade. Definir prazos claros. Trabalhar decisão com dados parciais.'
-      };
-      const date=r.submittedAt?new Date(r.submittedAt).toLocaleString('pt-BR'):'';
-      return`<div class="cand-card" id="cc${i}">
-        <div class="cand-header" onclick="toggleCand(${i})">
-          <div class="cand-left">
-            <div class="cand-avatar" style="background:${p.bg};color:${p.color}">${dominant}</div>
-            <div>
-              <div class="cand-name">${r.name}</div>
-              <div class="cand-email">${r.email}</div>
+    </div>
+    <div class="kpi-grid">
+      ${kpis.map(k=>`<div class="kpi" style="--kc:${k.c}">
+        <div class="kpi-lbl">${k.l}</div>
+        <div class="kpi-val">${k.v}</div>
+        <div class="kpi-sub">${k.s}</div>
+      </div>`).join('')}
+    </div>
+    ${ST.loading?`<div class="loading-adm">⏳ Carregando...</div>`:
+      rs.length===0?`<div class="empty-adm"><div style="font-size:48px;margin-bottom:12px">📭</div><div>Nenhuma resposta ainda.</div></div>`:
+      rs.map((r,i)=>{
+        const {dom,pct}=calcScore(r.respostas);
+        const p=PROF[dom];
+        const dt=r.criado_em?new Date(r.criado_em).toLocaleString('pt-BR'):'';
+        return`<div class="cand-row">
+          <div class="cand-top" onclick="toggleCard(${i})">
+            <div class="cand-info">
+              <div class="cand-av" style="background:${p.color}">${dom}</div>
+              <div>
+                <div class="cand-nm">${r.nome}</div>
+                <div class="cand-em">${r.email}</div>
+              </div>
+            </div>
+            <div class="cand-right">
+              <span class="pill" style="background:${p.bg};color:${p.color}">${p.icon} ${p.name}</span>
+              <span class="cand-dt">${dt}</span>
+              <button class="btn-print" onclick="event.stopPropagation();printReport(${JSON.stringify(r).replace(/"/g,'&quot;')})">
+                🖨️ Imprimir Relatório
+              </button>
+              <span class="chev" id="cv${i}">⌄</span>
             </div>
           </div>
-          <div class="cand-right">
-            <span class="profile-pill" style="background:${p.bg};color:${p.color}">${p.icon} ${p.name}</span>
-            <span class="cand-date">${date}</span>
-            <button onclick="event.stopPropagation();openReport(r.id)" style="padding:6px 14px;border-radius:6px;border:none;background:linear-gradient(135deg,#6c63ff,#4834d4);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif">📄 Relatório</button>
-            <span class="cand-chev" id="chev${i}">⌄</span>
+          <div class="cand-body" id="cb${i}">
+            <div style="padding:8px 0 4px">${resultCardHTML(r)}</div>
           </div>
-        </div>
-        <div class="cand-body" id="cb${i}">
-          <div style="padding:12px 8px 4px">
-            ${resultCardHTML(r)}
-          </div>
-        </div>
-      </div>`;
-    }).join('');
-
-  return`<div class="adm">
-    <div class="adm-topbar">
-      <div class="adm-logo">📊 <span>DISC</span> Admin</div>
-      <div class="adm-topbar-right">
-        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-right:4px">${count} resposta(s)</div>
-        <button class="adm-btn adm-btn-accent" onclick="refreshAdmin()">🔄 Atualizar</button>
-        <button class="adm-btn" onclick="setState({view:'form',step:'info'})">← Sair</button>
-      </div>
-    </div>
-    <div class="adm-content">
-      ${state.loading?`<div class="adm-loading">⏳ Carregando...</div>`:`
-      <!-- KPIs -->
-      <div class="kpi-grid">
-        ${kpis.map(k=>`<div class="kpi-card" style="--kc:${k.c}">
-          <div class="kpi-icon">${k.icon}</div>
-          <div class="kpi-label">${k.label}</div>
-          <div class="kpi-value" style="font-size:${String(k.value).length>6?'18px':'30px'}">${k.value}</div>
-          <div class="kpi-sub">${k.sub}</div>
-        </div>`).join('')}
-      </div>
-      <!-- Charts -->
-      <div class="charts-row">
-        <div class="chart-box">
-          <div class="chart-title">Distribuição por Perfil Dominante</div>
-          ${barChart}
-        </div>
-        <div class="chart-box">
-          <div class="chart-title">Média de Score por Dimensão</div>
-          ${avgChart}
-        </div>
-      </div>
-      <!-- Filters -->
-      <div class="filter-row">
-        <button class="f-btn ${!state.adminFilter||state.adminFilter==='all'?'fa':''}" style="--fc:#6c63ff" onclick="setAdminFilter('all',this)">Todos (${count})</button>
-        ${['D','I','S','C'].map(k=>`<button class="f-btn ${state.adminFilter===k?'fa':''}" style="--fc:${DISC_COLORS[k]}" onclick="setAdminFilter('${k}',this)">${PROFILES[k].icon} ${PROFILES[k].name} (${domCounts[k]})</button>`).join('')}
-        <input class="f-search" placeholder="🔍 Buscar por nome ou e-mail..." oninput="setAdminSearch(this.value)" value="${state.adminSearch||''}"/>
-      </div>
-      <!-- Cards -->
-      ${cards}
-      `}
-    </div>
+        </div>`;
+      }).join('')
+    }
   </div>`;
 }
 
-function toggleCand(i){
-  const b=document.getElementById('cb'+i);
-  const c=document.getElementById('chev'+i);
-  const open=b.classList.toggle('open');
-  c.classList.toggle('open',open);
-}
-
-function setAdminFilter(f){
-  setState({adminFilter:f});
-}
-
-
-function setAdminSearch(q){
-  state.adminSearch=q;
-  render();
-}
-
-
-
-
-// ── MAIN RENDER ──
-function render(){
-  const app=document.getElementById("app");
-  if(state.view==="admin"){app.innerHTML=renderAdmin();return;}
-  app.innerHTML=`<div class="wrap">${
-    state.view==="form"?(state.step==="info"?renderInfo():renderQuestions()):
-    state.view==="done"?renderDone():
-    renderAdminLogin()
+function draw(){
+  const app=document.getElementById('app');
+  if(ST.view==='admin'){
+    document.body.style.padding='24px 16px';
+    app.innerHTML=`<div style="max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:0">${renderAdmin()}</div>`;
+    return;
+  }
+  document.body.style.padding='24px 16px';
+  app.innerHTML=`<div class="app-wrap">${
+    ST.view==='adminLogin'?renderAdminLogin():
+    ST.view==='resultado'?renderResultado():
+    ST.step==='perguntas'?renderPerguntas():
+    renderInfo()
   }</div>`;
 }
 
-// ── GLOBAL FUNCTIONS (called from HTML) ──
-function startQuestions(){
-  const n=document.getElementById("inp-name")?.value||state.name;
-  const e=document.getElementById("inp-email")?.value||state.email;
-  state.name=n;state.email=e;
-  if(!n.trim()){setState({infoError:"Por favor, informe seu nome."});return;}
-  if(!e.trim()||!e.includes("@")){setState({infoError:"Por favor, informe um e-mail válido."});return;}
-  setState({infoError:"",step:"questions"});
-  window.scrollTo(0,0);
-}
-
-function selectAnswer(qId,type){
-  state.answers={...state.answers,[qId]:type};
-  render();
-}
-
-
-// ── PRINT ──
-
-
-
-// ── OPEN REPORT ──
-function openReport(id){
-  var r = (window._discResults||{})[id];
-  if(!r){ alert('Dados nao encontrados. Atualize o painel.'); return; }
-  var s = score(r.answers);
-  var dom = s.dominant, pct = s.pct, counts = s.counts;
-  var p = PROFILES[dom];
-  var kc={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
-  var kb={D:'#FDF2F0',I:'#FEF9F0',S:'#F0FBF4',C:'#EBF5FB'};
-  var dt = r.submittedAt ? new Date(r.submittedAt).toLocaleString('pt-BR') : '';
-  var rec={D:'Indicada para funcoes com metas claras e autonomia. Potencial para lideranca de projetos. Estimular escuta ativa e integracao com equipe.',I:'Indicada para comunicacao e trabalho colaborativo. Estruturar prazos com checklist. Potencial para onboarding e engajamento.',S:'Ideal para consistencia e colaboracao. Excelente para analise de rotina. Encorajar posicionamento mais ativo em reunioes estrategicas.',C:'Ideal para analise tecnica e controle de qualidade. Definir prazos claros e estimular decisao com dados parciais.'};
-
-  var cards = ['D','I','S','C'].map(function(k){
-    return '<div style="border-radius:8px;padding:12px;text-align:center;background:'+kb[k]+';border:2px solid '+(k===dom?kc[k]:'#eee')+'">'+
-      '<div style="font-size:18px;font-weight:900;color:'+kc[k]+'">'+k+'</div>'+
-      '<div style="font-size:9px;color:'+kc[k]+';margin-top:1px">'+PROFILES[k].name+'</div>'+
-      '<div style="font-size:22px;font-weight:800;color:'+kc[k]+';margin:4px 0">'+pct[k]+'%</div>'+
-      '<div style="font-size:9px;color:#999">'+counts[k]+' resp.</div>'+
-    '</div>';
-  }).join('');
-
-  var bars = ['D','I','S','C'].map(function(k){
-    return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">'+
-      '<div style="width:9px;height:9px;border-radius:2px;background:'+kc[k]+';flex-shrink:0"></div>'+
-      '<span style="color:'+kc[k]+';font-weight:700;width:14px;font-size:10px">'+k+'</span>'+
-      '<div style="flex:1;height:6px;background:#eee;border-radius:3px;overflow:hidden">'+
-        '<div style="width:'+pct[k]+'%;height:100%;background:'+kc[k]+';border-radius:3px"></div>'+
-      '</div>'+
-      '<span style="width:26px;text-align:right;color:'+kc[k]+';font-size:10px;font-weight:700">'+pct[k]+'%</span>'+
-    '</div>';
-  }).join('');
-
-  var strengths = p.strengths.map(function(s){ return '<div style="font-size:11px;color:#1a3d24;margin-bottom:3px">&bull; '+s+'</div>'; }).join('');
-  var challenges = p.challenges.map(function(s){ return '<div style="font-size:11px;color:#5a1a14;margin-bottom:3px">&bull; '+s+'</div>'; }).join('');
-
-  var body = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">'+
-    '<meta name="viewport" content="width=device-width,initial-scale=1">'+
-    '<title>Relatorio DISC - '+r.name+'</title>'+
-    '<style>'+
-    '*{box-sizing:border-box;margin:0;padding:0}'+
-    'body{font-family:Arial,sans-serif;background:#e0e0ec}'+
-    '#bar{position:fixed;top:0;left:0;right:0;background:#0f0c29;padding:12px 22px;display:flex;justify-content:space-between;align-items:center;z-index:9999;box-shadow:0 2px 16px rgba(0,0,0,.5)}'+
-    '#bar h2{color:#fff;font-size:14px;font-weight:700}'+
-    '.btn{padding:9px 20px;border-radius:7px;border:none;font-size:13px;font-weight:700;cursor:pointer;margin-left:8px;font-family:Arial,sans-serif}'+
-    '.bp{background:linear-gradient(135deg,#6c63ff,#4834d4);color:#fff}'+
-    '.bs{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25)}'+
-    '#pg{width:210mm;background:#fff;margin:68px auto 24px;box-shadow:0 6px 32px rgba(0,0,0,.18)}'+
-    '@media print{#bar{display:none!important}#pg{margin:0!important;box-shadow:none!important;width:100%!important}body{background:#fff!important}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}'+
-    '</style></head><body>'+
-    '<div id="bar">'+
-      '<h2>Relatorio DISC &mdash; '+r.name+'</h2>'+
-      '<div>'+
-        '<button class="btn bp" onclick="window.print()">Imprimir / Salvar PDF</button>'+
-        '<button class="btn bs" onclick="window.close()">&#10005; Fechar</button>'+
-      '</div>'+
-    '</div>'+
-    '<div id="pg">'+
-      '<div style="background:linear-gradient(135deg,#0f0c29,#0f3460);padding:22px 26px;display:flex;justify-content:space-between;align-items:center">'+
-        '<div>'+
-          '<div style="font-size:19px;font-weight:800;color:#fff">Avaliacao DISC</div>'+
-          '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">Relatorio Individual de Perfil Comportamental</div>'+
-        '</div>'+
-        '<div style="font-size:11px;color:rgba(255,255,255,.45)">'+dt+'</div>'+
-      '</div>'+
-      '<div style="padding:13px 26px;display:flex;justify-content:space-between;align-items:center;background:'+p.bg+';border-bottom:3px solid '+p.color+'">'+
-        '<div style="display:flex;align-items:center;gap:11px">'+
-          '<div style="width:42px;height:42px;border-radius:9px;background:'+p.color+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0">'+dom+'</div>'+
-          '<div>'+
-            '<div style="font-size:16px;font-weight:800;color:#1a1a2e">'+r.name+'</div>'+
-            '<div style="font-size:11px;color:#777;margin-top:1px">'+r.email+'</div>'+
-          '</div>'+
-        '</div>'+
-        '<div style="background:'+p.color+';color:#fff;border-radius:18px;padding:6px 16px;font-size:12px;font-weight:800">Perfil '+dom+' &bull; '+p.name+'</div>'+
-      '</div>'+
-      '<div style="padding:16px 26px">'+
-        '<div style="font-size:10px;font-weight:800;color:#bbb;letter-spacing:2px;text-transform:uppercase;padding-bottom:7px;border-bottom:1px solid #eee;margin-bottom:12px">Resultado Geral</div>'+
-        '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">'+cards+'</div>'+
-        '<div style="display:grid;grid-template-columns:150px 1fr;gap:14px">'+
-          '<div style="display:flex;flex-direction:column;gap:4px;padding-top:4px">'+bars+'</div>'+
-          '<div>'+
-            '<div style="background:'+p.bg+';border-left:4px solid '+p.color+';padding:10px 12px;border-radius:0 6px 6px 0;font-style:italic;font-size:11.5px;line-height:1.65;color:#333;margin-bottom:10px">'+p.desc+'</div>'+
-            '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px">'+
-              '<div style="background:#f0fbf4;border:1px solid #c8e6c9;border-radius:6px;padding:9px">'+
-                '<div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#1e6b3a;margin-bottom:5px">Pontos Fortes</div>'+
-                strengths+
-              '</div>'+
-              '<div style="background:#fdf2f0;border:1px solid #ffcdd2;border-radius:6px;padding:9px">'+
-                '<div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#c62828;margin-bottom:5px">Pontos de Atencao</div>'+
-                challenges+
-              '</div>'+
-            '</div>'+
-            '<div style="background:#eef4ff;border-left:4px solid #4a6cf7;border-radius:0 6px 6px 0;padding:9px 12px;margin-bottom:8px">'+
-              '<div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a237e;margin-bottom:4px;text-transform:uppercase">Orientacao ao Candidato</div>'+
-              '<div style="font-size:11.5px;color:#1a237e;line-height:1.6">'+p.analyst+'</div>'+
-            '</div>'+
-            '<div style="background:#f0fbf4;border-left:4px solid #1e8449;border-radius:0 6px 6px 0;padding:9px 12px">'+
-              '<div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a3d24;margin-bottom:4px;text-transform:uppercase">Recomendacao ao Recrutador</div>'+
-              '<div style="font-size:11.5px;color:#1a3d24;line-height:1.6">'+rec[dom]+'</div>'+
-            '</div>'+
-          '</div>'+
-        '</div>'+
-      '</div>'+
-      '<div style="background:#f8f9fc;border-top:1px solid #eee;padding:9px 26px;display:flex;justify-content:space-between;align-items:center;margin-top:8px">'+
-        '<div style="font-size:10px;color:#aaa">Avaliacao DISC &bull; '+r.name+' &bull; '+dt+'</div>'+
-        '<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:3px 8px;font-size:10px;color:#856404;font-weight:700">Documento Confidencial</div>'+
-      '</div>'+
-    '</div>'+
-    '</body></html>';
-
-  var blob = new Blob([body], {type:'text/html;charset=utf-8'});
-  var url  = URL.createObjectURL(blob);
-  var tab  = window.open(url, '_blank');
-  if(!tab){ window.location.href = url; }
-}
-
-render();
+draw();
 </script>
 </body>
 </html>
