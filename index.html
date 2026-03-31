@@ -241,6 +241,7 @@ let state = {
 
 function setState(patch){
   Object.assign(state, patch);
+  if(patch.allResults) window._discResults={},(patch.allResults||[]).forEach(function(r){window._discResults[r.id]=r;});
   render();
 }
 
@@ -572,7 +573,7 @@ function renderAdmin(){
           <div class="cand-right">
             <span class="profile-pill" style="background:${p.bg};color:${p.color}">${p.icon} ${p.name}</span>
             <span class="cand-date">${date}</span>
-            <a href="https://zjwiwxldpkqsdorhfbqr.supabase.co/functions/v1/disc-report?id=${r.id}" target="_blank" onclick="event.stopPropagation()" style="padding:6px 14px;border-radius:6px;background:linear-gradient(135deg,#6c63ff,#4834d4);color:#fff;font-size:11px;font-weight:700;text-decoration:none;font-family:Arial,sans-serif;display:inline-block">📄 Relatório</a>
+            <button onclick="event.stopPropagation();openReport(r.id)" style="padding:6px 14px;border-radius:6px;border:none;background:linear-gradient(135deg,#6c63ff,#4834d4);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif">📄 Relatório</button>
             <span class="cand-chev" id="chev${i}">⌄</span>
           </div>
         </div>
@@ -712,6 +713,122 @@ function selectAnswer(qId,type){
 
 // ── PRINT ──
 
+
+
+// ── OPEN REPORT ──
+function openReport(id){
+  var r = (window._discResults||{})[id];
+  if(!r){ alert('Dados nao encontrados. Atualize o painel.'); return; }
+  var s = score(r.answers);
+  var dom = s.dominant, pct = s.pct, counts = s.counts;
+  var p = PROFILES[dom];
+  var kc={D:'#C0392B',I:'#D35400',S:'#1E8449',C:'#1A5276'};
+  var kb={D:'#FDF2F0',I:'#FEF9F0',S:'#F0FBF4',C:'#EBF5FB'};
+  var dt = r.submittedAt ? new Date(r.submittedAt).toLocaleString('pt-BR') : '';
+  var rec={D:'Indicada para funcoes com metas claras e autonomia. Potencial para lideranca de projetos. Estimular escuta ativa e integracao com equipe.',I:'Indicada para comunicacao e trabalho colaborativo. Estruturar prazos com checklist. Potencial para onboarding e engajamento.',S:'Ideal para consistencia e colaboracao. Excelente para analise de rotina. Encorajar posicionamento mais ativo em reunioes estrategicas.',C:'Ideal para analise tecnica e controle de qualidade. Definir prazos claros e estimular decisao com dados parciais.'};
+
+  var cards = ['D','I','S','C'].map(function(k){
+    return '<div style="border-radius:8px;padding:12px;text-align:center;background:'+kb[k]+';border:2px solid '+(k===dom?kc[k]:'#eee')+'">'+
+      '<div style="font-size:18px;font-weight:900;color:'+kc[k]+'">'+k+'</div>'+
+      '<div style="font-size:9px;color:'+kc[k]+';margin-top:1px">'+PROFILES[k].name+'</div>'+
+      '<div style="font-size:22px;font-weight:800;color:'+kc[k]+';margin:4px 0">'+pct[k]+'%</div>'+
+      '<div style="font-size:9px;color:#999">'+counts[k]+' resp.</div>'+
+    '</div>';
+  }).join('');
+
+  var bars = ['D','I','S','C'].map(function(k){
+    return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">'+
+      '<div style="width:9px;height:9px;border-radius:2px;background:'+kc[k]+';flex-shrink:0"></div>'+
+      '<span style="color:'+kc[k]+';font-weight:700;width:14px;font-size:10px">'+k+'</span>'+
+      '<div style="flex:1;height:6px;background:#eee;border-radius:3px;overflow:hidden">'+
+        '<div style="width:'+pct[k]+'%;height:100%;background:'+kc[k]+';border-radius:3px"></div>'+
+      '</div>'+
+      '<span style="width:26px;text-align:right;color:'+kc[k]+';font-size:10px;font-weight:700">'+pct[k]+'%</span>'+
+    '</div>';
+  }).join('');
+
+  var strengths = p.strengths.map(function(s){ return '<div style="font-size:11px;color:#1a3d24;margin-bottom:3px">&bull; '+s+'</div>'; }).join('');
+  var challenges = p.challenges.map(function(s){ return '<div style="font-size:11px;color:#5a1a14;margin-bottom:3px">&bull; '+s+'</div>'; }).join('');
+
+  var body = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">'+
+    '<meta name="viewport" content="width=device-width,initial-scale=1">'+
+    '<title>Relatorio DISC - '+r.name+'</title>'+
+    '<style>'+
+    '*{box-sizing:border-box;margin:0;padding:0}'+
+    'body{font-family:Arial,sans-serif;background:#e0e0ec}'+
+    '#bar{position:fixed;top:0;left:0;right:0;background:#0f0c29;padding:12px 22px;display:flex;justify-content:space-between;align-items:center;z-index:9999;box-shadow:0 2px 16px rgba(0,0,0,.5)}'+
+    '#bar h2{color:#fff;font-size:14px;font-weight:700}'+
+    '.btn{padding:9px 20px;border-radius:7px;border:none;font-size:13px;font-weight:700;cursor:pointer;margin-left:8px;font-family:Arial,sans-serif}'+
+    '.bp{background:linear-gradient(135deg,#6c63ff,#4834d4);color:#fff}'+
+    '.bs{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25)}'+
+    '#pg{width:210mm;background:#fff;margin:68px auto 24px;box-shadow:0 6px 32px rgba(0,0,0,.18)}'+
+    '@media print{#bar{display:none!important}#pg{margin:0!important;box-shadow:none!important;width:100%!important}body{background:#fff!important}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}'+
+    '</style></head><body>'+
+    '<div id="bar">'+
+      '<h2>Relatorio DISC &mdash; '+r.name+'</h2>'+
+      '<div>'+
+        '<button class="btn bp" onclick="window.print()">Imprimir / Salvar PDF</button>'+
+        '<button class="btn bs" onclick="window.close()">&#10005; Fechar</button>'+
+      '</div>'+
+    '</div>'+
+    '<div id="pg">'+
+      '<div style="background:linear-gradient(135deg,#0f0c29,#0f3460);padding:22px 26px;display:flex;justify-content:space-between;align-items:center">'+
+        '<div>'+
+          '<div style="font-size:19px;font-weight:800;color:#fff">Avaliacao DISC</div>'+
+          '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">Relatorio Individual de Perfil Comportamental</div>'+
+        '</div>'+
+        '<div style="font-size:11px;color:rgba(255,255,255,.45)">'+dt+'</div>'+
+      '</div>'+
+      '<div style="padding:13px 26px;display:flex;justify-content:space-between;align-items:center;background:'+p.bg+';border-bottom:3px solid '+p.color+'">'+
+        '<div style="display:flex;align-items:center;gap:11px">'+
+          '<div style="width:42px;height:42px;border-radius:9px;background:'+p.color+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0">'+dom+'</div>'+
+          '<div>'+
+            '<div style="font-size:16px;font-weight:800;color:#1a1a2e">'+r.name+'</div>'+
+            '<div style="font-size:11px;color:#777;margin-top:1px">'+r.email+'</div>'+
+          '</div>'+
+        '</div>'+
+        '<div style="background:'+p.color+';color:#fff;border-radius:18px;padding:6px 16px;font-size:12px;font-weight:800">Perfil '+dom+' &bull; '+p.name+'</div>'+
+      '</div>'+
+      '<div style="padding:16px 26px">'+
+        '<div style="font-size:10px;font-weight:800;color:#bbb;letter-spacing:2px;text-transform:uppercase;padding-bottom:7px;border-bottom:1px solid #eee;margin-bottom:12px">Resultado Geral</div>'+
+        '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">'+cards+'</div>'+
+        '<div style="display:grid;grid-template-columns:150px 1fr;gap:14px">'+
+          '<div style="display:flex;flex-direction:column;gap:4px;padding-top:4px">'+bars+'</div>'+
+          '<div>'+
+            '<div style="background:'+p.bg+';border-left:4px solid '+p.color+';padding:10px 12px;border-radius:0 6px 6px 0;font-style:italic;font-size:11.5px;line-height:1.65;color:#333;margin-bottom:10px">'+p.desc+'</div>'+
+            '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px">'+
+              '<div style="background:#f0fbf4;border:1px solid #c8e6c9;border-radius:6px;padding:9px">'+
+                '<div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#1e6b3a;margin-bottom:5px">Pontos Fortes</div>'+
+                strengths+
+              '</div>'+
+              '<div style="background:#fdf2f0;border:1px solid #ffcdd2;border-radius:6px;padding:9px">'+
+                '<div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#c62828;margin-bottom:5px">Pontos de Atencao</div>'+
+                challenges+
+              '</div>'+
+            '</div>'+
+            '<div style="background:#eef4ff;border-left:4px solid #4a6cf7;border-radius:0 6px 6px 0;padding:9px 12px;margin-bottom:8px">'+
+              '<div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a237e;margin-bottom:4px;text-transform:uppercase">Orientacao ao Candidato</div>'+
+              '<div style="font-size:11.5px;color:#1a237e;line-height:1.6">'+p.analyst+'</div>'+
+            '</div>'+
+            '<div style="background:#f0fbf4;border-left:4px solid #1e8449;border-radius:0 6px 6px 0;padding:9px 12px">'+
+              '<div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#1a3d24;margin-bottom:4px;text-transform:uppercase">Recomendacao ao Recrutador</div>'+
+              '<div style="font-size:11.5px;color:#1a3d24;line-height:1.6">'+rec[dom]+'</div>'+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="background:#f8f9fc;border-top:1px solid #eee;padding:9px 26px;display:flex;justify-content:space-between;align-items:center;margin-top:8px">'+
+        '<div style="font-size:10px;color:#aaa">Avaliacao DISC &bull; '+r.name+' &bull; '+dt+'</div>'+
+        '<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:3px 8px;font-size:10px;color:#856404;font-weight:700">Documento Confidencial</div>'+
+      '</div>'+
+    '</div>'+
+    '</body></html>';
+
+  var blob = new Blob([body], {type:'text/html;charset=utf-8'});
+  var url  = URL.createObjectURL(blob);
+  var tab  = window.open(url, '_blank');
+  if(!tab){ window.location.href = url; }
+}
 
 render();
 </script>
