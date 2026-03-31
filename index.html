@@ -578,42 +578,8 @@ function renderAdmin(){
           </div>
         </div>
         <div class="cand-body" id="cb${i}">
-          <div class="cand-grid">
-            <div>
-              <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:1px;margin-bottom:12px">SCORES DISC</div>
-              <div class="score-bars">
-                ${['D','I','S','C'].map(k=>`
-                  <div class="sb-row">
-                    <div class="sb-key" style="color:${DISC_COLORS[k]}">${k}</div>
-                    <div class="sb-track"><div class="sb-fill" style="width:${pct[k]}%;background:${DISC_COLORS[k]}"></div></div>
-                    <div class="sb-pct">${pct[k]}%</div>
-                  </div>`).join('')}
-              </div>
-              <div style="margin-top:14px;display:flex;flex-direction:column;gap:5px;">
-                ${['D','I','S','C'].map(k=>`
-                  <div style="font-size:12px;color:rgba(255,255,255,.4)">${k} — <strong style="color:${DISC_COLORS[k]}">${counts[k]} respostas</strong></div>`).join('')}
-              </div>
-              ${radarSVG(pct)}
-            </div>
-            <div>
-              <div class="cand-desc" style="border-color:${p.color}">${p.desc}</div>
-              <div class="tag-section">
-                <div class="tag-title" style="color:#27ae60">✅ Pontos Fortes</div>
-                <div class="tags">${p.strengths.map(s=>`<span class="tag" style="background:#0d2d1a;color:#4ade80">✓ ${s}</span>`).join('')}</div>
-              </div>
-              <div class="tag-section">
-                <div class="tag-title" style="color:#e74c3c">⚠️ Pontos de Atenção</div>
-                <div class="tags">${p.challenges.map(s=>`<span class="tag" style="background:#2d0d0d;color:#f87171">• ${s}</span>`).join('')}</div>
-              </div>
-              <div class="eval-box" style="background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.2)">
-                <div class="eval-title" style="color:#a78bfa">🧑‍💼 Avaliação para Analista</div>
-                <div class="eval-text" style="color:rgba(200,195,255,.8)">${p.analyst}</div>
-              </div>
-              <div class="rec-box" style="background:rgba(30,132,73,.1);border:1px solid rgba(30,132,73,.25)">
-                <div class="eval-title" style="color:#4ade80">📋 Recomendação ao Recrutador</div>
-                <div class="eval-text" style="color:rgba(150,220,170,.8)">${rec[dominant]}</div>
-              </div>
-            </div>
+          <div style="padding:12px 8px 4px">
+            ${resultCardHTML(r)}
           </div>
         </div>
       </div>`;
